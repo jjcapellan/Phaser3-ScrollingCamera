@@ -5,19 +5,13 @@ function runGame() {
     height: 600,
     parent: 'game',
     backgroundColor: 0x000000,
-    physics: {
-      default: 'arcade',
-      arcade: {
-        debug: false
-      }
-    },
-    scene: [ Boot ]
+    scene: [Test]
   };
 
   var game = new Phaser.Game(config);
 }
 
-window.onload = function() {
+window.onload = function () {
   runGame();
   resize();
   window.addEventListener('resize', resize);

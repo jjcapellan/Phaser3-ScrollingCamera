@@ -1,6 +1,6 @@
-class Boot extends Phaser.Scene {
+class Test extends Phaser.Scene {
   constructor() {
-    super('boot');
+    super('test');
   }
 
   create() {
