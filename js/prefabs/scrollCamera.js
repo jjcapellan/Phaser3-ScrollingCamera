@@ -1,5 +1,5 @@
 class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
-    constructor(scene, x, y, width, height, { top, bottom, wheel, drag, minSpeed, snapGrid }) {
+    constructor(scene, x, y, width, height, { top, bottom, wheel = false, drag = 0.95, minSpeed = 4, snapGrid }) {
         super(x, y, width, height);
         // Public members
         this.scene = scene;
@@ -16,6 +16,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (snapGrid) {
             this.snapGrid.topMargin = snapGrid.topMargin || 40;
             this.snapGrid.padding = snapGrid.padding || 20;
+            this.snapGrid.deadZone = snapGrid.deadZone || 0.4;
         }
         this.init();
     }
@@ -101,7 +102,11 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
                 let snapTop = this.top + this.snapGrid.topMargin;
                 let snapPosition = this.scrollY - snapTop;
                 let gap = this.snapGrid.padding;
-                this.scrollY = snapTop + Math.round(snapPosition / gap) * gap;
+                let gapRatio = snapPosition / gap;
+                let gapRatioRemain = gapRatio % 1;
+                if (Math.abs(0.5 - gapRatioRemain) > this.snapGrid.deadZone / 2) {
+                    this.scrollY = snapTop + Math.round(gapRatio) * gap;
+                }
             }
         }
         this.clampScroll();
