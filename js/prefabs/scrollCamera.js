@@ -122,7 +122,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
                 let gap = this.snapGrid.padding;
                 let gapRatio = snapPosition / gap;
                 let gapRatioRemain = gapRatio % 1;
-                if (Math.abs(0.5 - gapRatioRemain) > this.snapGrid.deadZone / 2) {
+                if (Math.abs(0.5 - gapRatioRemain) >= this.snapGrid.deadZone / 2) {
                     this.scrollY = snapTop + Math.round(gapRatio) * gap;
                 }
             }
