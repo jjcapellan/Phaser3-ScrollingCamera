@@ -17,6 +17,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             this.snapGrid.topMargin = snapGrid.topMargin || 40;
             this.snapGrid.padding = snapGrid.padding || 20;
             this.snapGrid.deadZone = snapGrid.deadZone || 0.4;
+            this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
         }
         this.init();
     }
@@ -35,7 +36,6 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._startTime = 0;
         // timeStamp when drag action ends
         this._endTime = 0;
-
         //// Sets events
         this.setDragEvent();
         if (this.wheel) {
@@ -91,6 +91,24 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     clampScroll() {
         this.scrollY = Phaser.Math.Clamp(this.scrollY, this.top, this.bottom);
         this._endY = this.scrollY;
+    }
+
+    disableSnap(){
+        if(snapGrid){
+            this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
+        }
+        this.snapGrid = null;
+    }
+
+    enableSnap(){
+        if(this.snapBackup){
+            this.snapGrid = JSON.parse(JSON.stringify(this.snapGrid));
+        } else {
+            this.snapGrid = {};
+            this.snapGrid.topMargin = 40;
+            this.snapGrid.padding = 20;
+            this.snapGrid.deadZone = 0.4;
+        }
     }
 
     update(time, delta) {
