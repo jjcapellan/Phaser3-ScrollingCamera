@@ -14,9 +14,9 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.minSpeed = minSpeed || 4;
         this.snapGrid = snapGrid || null;
         if (snapGrid) {
-            this.snapGrid.topMargin = snapGrid.topMargin || 40;
+            this.snapGrid.topMargin = (snapGrid.topMargin === undefined)?40:snapGrid.topMargin;
             this.snapGrid.padding = snapGrid.padding || 20;
-            this.snapGrid.deadZone = snapGrid.deadZone || 0.4;
+            this.snapGrid.deadZone = (snapGrid.deadZone === undefined)?0.4:snapGrid.deadZone;
             this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
         }
         this.init();
@@ -94,7 +94,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
     disableSnap(){
-        if(snapGrid){
+        if(this.snapGrid){
             this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
         }
         this.snapGrid = null;
@@ -102,7 +102,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     enableSnap(){
         if(this.snapBackup){
-            this.snapGrid = JSON.parse(JSON.stringify(this.snapGrid));
+            this.snapGrid = JSON.parse(JSON.stringify(this.snapBackup));
         } else {
             this.snapGrid = {};
             this.snapGrid.topMargin = 40;
