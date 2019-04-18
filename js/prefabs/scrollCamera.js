@@ -1,24 +1,44 @@
+
 class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
-    constructor(scene, x, y, width, height, { top, bottom, wheel = false, drag = 0.95, minSpeed = 4, snapGrid }) {
+    /**
+     * Creates an instance of ScrollingCamera.
+     * @param  {Phaser.Scene} scene 
+     * @param  {scrollConfig} scrollConfig Contains scroll parameters 
+     * @memberof ScrollingCamera
+     */
+    constructor(
+        scene,
+        {
+            x = 0,
+            y = 0,
+            width,
+            height,
+            top = 0,
+            bottom = 5000,
+            wheel = false,
+            drag = 0.95,
+            minSpeed = 4,
+            snap = false,
+            snapConfig = {}
+        }
+    ) {
         super(x, y, width, height);
-        // Public members
         this.scene = scene;
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.width = width || this.scene.game.config.width;
+        this.height = height || this.scene.game.config.height;
         this.top = top;
         this.bottom = bottom - this.height;
-        this.wheel = wheel || false;
-        this.drag = drag || 0.95;
-        this.minSpeed = minSpeed || 4;
-        this.snapGrid = snapGrid || null;
-        if (snapGrid) {
-            this.snapGrid.topMargin = (snapGrid.topMargin === undefined)?40:snapGrid.topMargin;
-            this.snapGrid.padding = snapGrid.padding || 20;
-            this.snapGrid.deadZone = (snapGrid.deadZone === undefined)?0.4:snapGrid.deadZone;
-            this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
-        }
+        this.wheel = wheel;
+        this.drag = drag;
+        this.minSpeed = minSpeed;
+        this.snap = snap;
+        this.snapGrid = snapConfig;        
+        this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
+        this.snapGrid.padding = snapConfig.padding || 20;
+        this.snapGrid.deadZone = (snapConfig.deadZone === undefined) ? 0.4 : snapConfig.deadZone;
+
         this.init();
     }
 
@@ -93,30 +113,12 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._endY = this.scrollY;
     }
 
-    disableSnap(){
-        if(this.snapGrid){
-            this.snapBackup = JSON.parse(JSON.stringify(this.snapGrid));
-        }
-        this.snapGrid = null;
-    }
-
-    enableSnap(){
-        if(this.snapBackup){
-            this.snapGrid = JSON.parse(JSON.stringify(this.snapBackup));
-        } else {
-            this.snapGrid = {};
-            this.snapGrid.topMargin = 40;
-            this.snapGrid.padding = 20;
-            this.snapGrid.deadZone = 0.4;
-        }
-    }
-
     update(time, delta) {
         this.scrollY += this._speed * (delta / 1000);
         this._speed *= this.drag;
         if (Math.abs(this._speed) < this.minSpeed) {
             this._speed = 0;
-            if (this.snapGrid && !this.scene.input.activePointer.isDown) {
+            if (this.snap && !this.scene.input.activePointer.isDown) {
                 let snapTop = this.top + this.snapGrid.topMargin;
                 let snapPosition = this.scrollY - snapTop;
                 let gap = this.snapGrid.padding;
@@ -148,3 +150,32 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     }
 }
+
+// ************************ TYPE DEFINITIONS *************************************
+// *******************************************************************************
+
+/**
+ * Contains snap effect parameters
+ * @typedef  {object} snapConfig
+ * @property  {number} [topMargin = 0] Position y of the first snap point from the top.
+ * @property  {number} [padding = 20] Vertical distance in pixels between snap points.
+ * @property  {number} [deadZone = 0] % of space between two snap points not influenced by snap effect.\n
+ * Example: 0.2 means 20% of middle space between two snap points is free of snap effect. 
+ */
+
+/**
+ * Contains all cameraScroll parameters
+ * @typedef  {object} scrollConfig
+ * @property  {number} [x = 0] The x position of this camera
+ * @property  {number} [y = 0] The y position of this camera
+ * @property  {number} [width = Phaser.game.config.width] The width of this camera
+ * @property  {number} [height = Phaser.game.config.height] The height of this camera
+ * @property  {numver} [top = 0] Upper bound of the scroll
+ * @property  {number} [bottom = 5000] Lower bound of the scroll
+ * @property  {bool} [wheel = false] This camera uses the mouse wheel?
+ * @property  {number} [drag = 0.95] Number between 0 and 1.\n
+ * Reduces the scroll speed per game step.\n
+ * Example: 0.5 reduces 50% scroll speed per game step.
+ * @property  {number} [minSpeed] Bellow this speed value (pixels/second), the scroll is stopped.
+ * @property  {snapConfig} [snapConfig] Contains snap effect parameters
+ */

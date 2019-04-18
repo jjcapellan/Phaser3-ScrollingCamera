@@ -43,17 +43,13 @@ class Test extends Phaser.Scene {
     this.checkbox = this.add.existing(new CheckBox(this, this.leftMargin, this.actualBottomRow, { value: true })).setOrigin(0, 0);
     this.add.bitmapText(this.checkbox.x + this.checkbox.width + 20, this.checkbox.y, 'bmf', 'Enable/Disable snap scroll', 20);
     this.checkbox.on('pointerup', function () {
-      if (t.checkbox.value) {
-        t.camera1.enableSnap();
-      } else {
-        t.camera1.disableSnap();
-      }
+      t.camera1.snap = this.value;
     });
 
-    this.actualBottomRow += this.paddingY*3;
+    this.actualBottomRow += this.paddingY * 3;
 
-    this.add.bitmapText(this.leftMargin, this.actualBottomRow , 'bmf', 'Drag your pointer in the red rectangle or use\n'+
-    'the wheel of your mouse over the rectangle.', 16);
+    this.add.bitmapText(this.leftMargin, this.actualBottomRow, 'bmf', 'Drag your pointer in the red rectangle or use\n' +
+      'the wheel of your mouse over the rectangle.', 16);
 
     this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollCamera', 16).setTint(0xdd0000);
 
@@ -91,23 +87,24 @@ class Test extends Phaser.Scene {
 
   makeScrollCamera() {
     let cameraOptions = {
+      x: 50,
+      y: 50,
+      width: 300,
+      height: 500,
       top: 600,          // Top bound of scroll
       bottom: 3175,      // Bottom bound of scroll
-      wheel: true,       // Use mouse wheel? 
-      snapGrid: {        // Defines snap points
-        topMargin: 50,   
+      wheel: true,       // Use mouse wheel?
+      snap: true,        // Use snap points?
+      snapConfig: {        // Defines snap points
+        topMargin: 50,
         padding: 50,
         deadZone: 0      // % of space between points with not influenced by snap effect (0 - 1)
       }
     };
     this.camera1 = new ScrollingCamera(
       this,
-      50,
-      50,
-      300,
-      500,
       cameraOptions
-      );
+    );
     this.cameras.addExisting(this.camera1);
     this.camera1.scrollX = this.camera1.getScroll(this.game.config.width / 2, 0).x;
   }
