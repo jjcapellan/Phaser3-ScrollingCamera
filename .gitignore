@@ -1,3 +1,4 @@
 defs/
 *.json
 *.ts
+*.uglifyrc
