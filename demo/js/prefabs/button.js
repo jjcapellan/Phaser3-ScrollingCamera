@@ -50,7 +50,7 @@ class ButtonGenerator extends Phaser.GameObjects.Image {
       new Phaser.Geom.Rectangle(0, 0, this.width, this.height),
       Phaser.Geom.Rectangle.Contains
     );*/
-    
+
     this.setTexture('rt_button');
     this.enable();
     this.setBehaviors();
@@ -96,13 +96,13 @@ class ButtonGenerator extends Phaser.GameObjects.Image {
     texture.saveTexture('rt_button');
   }
 
-  disable(){
+  disable() {
     this.disableInteractive();
     this.setTint(0xff0000);
     this.setAlpha(0.5);
   }
 
-  enable(){
+  enable() {
     this.setInteractive();
     this.clearTint();
     this.clearAlpha();
@@ -112,21 +112,21 @@ class ButtonGenerator extends Phaser.GameObjects.Image {
     let t = this;
     this.on(
       'pointerover',
-      function() {
+      function () {
         this.setTint(0xefe823);
       },
       this
     );
     this.on(
       'pointerout',
-      function() {
+      function () {
         this.clearTint();
       },
       this
     );
 
     if (this.control) {
-      this.on('pointerup', function() {
+      this.on('pointerup', function () {
         if (t.control == 'increase') {
           t.increase();
         } else {
@@ -142,7 +142,7 @@ class ButtonGenerator extends Phaser.GameObjects.Image {
   increase() {
     this.object[this.property] += this.step;
     // If the number have decimals
-    if(Math.round(this.object[this.property]) != this.object[this.property]){
+    if (Math.round(this.object[this.property]) != this.object[this.property]) {
       this.object[this.property] = Math.round(this.object[this.property] * 100) / 100;
     }
     this.object[this.property] =
@@ -155,7 +155,7 @@ class ButtonGenerator extends Phaser.GameObjects.Image {
   decrease() {
     this.object[this.property] -= this.step;
     // If the number have decimals
-    if(Math.round(this.object[this.property]) != this.object[this.property]){
+    if (Math.round(this.object[this.property]) != this.object[this.property]) {
       this.object[this.property] = Math.round(this.object[this.property] * 100) / 100;
     }
     this.object[this.property] =

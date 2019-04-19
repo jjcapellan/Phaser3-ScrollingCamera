@@ -51,7 +51,7 @@ class Test extends Phaser.Scene {
     this.add.bitmapText(this.leftMargin, this.actualBottomRow, 'bmf', 'Drag your pointer in the red rectangle or use\n' +
       'the wheel of your mouse over the rectangle.', 16);
 
-    this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollCamera', 16).setTint(0xdd0000);
+    this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollingCamera v1.0.0', 16).setTint(0xdd0000);
 
   }
 
