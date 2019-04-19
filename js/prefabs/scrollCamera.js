@@ -1,4 +1,17 @@
 
+/**
+ * @author       Juan Jose Capellan <soycape@hotmail.com>
+ * @copyright    2019 Juan Jose Capellan
+ * @license      {@link https://github.com/jjcapellan/SIXDB/blob/master/LICENSE | MIT license}
+ */
+
+/**
+ * This type of Phaser camera can be useful to build user interfaces that require scrolling,
+ * but without needing scroll bars.
+ * The scroll is done by dragging the pointer or using the mouse wheel.
+ * @class ScrollingCamera
+ * @extends Phaser.Cameras.Scene2D.Camera
+ */
 class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * Creates an instance of ScrollingCamera.
