@@ -5,7 +5,7 @@
  * @author       Juan Jose Capellan <soycape@hotmail.com>
  * @copyright    2019 Juan Jose Capellan
  * @license      {@link https://github.com/jjcapellan/Phaser3-ScrollingCamera/blob/master/LICENSE | MIT license}
- * @version      1.0.0
+ * @version      1.0.1
  */
 
 /**
@@ -129,7 +129,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (this.wheel) {
             this.setWheelEvent();
         }
-                
+
         this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
         this.scene.cameras.addExisting(this);

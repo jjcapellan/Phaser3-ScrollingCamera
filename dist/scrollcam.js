@@ -5,7 +5,7 @@
  * @author       Juan Jose Capellan <soycape@hotmail.com>
  * @copyright    2019 Juan Jose Capellan
  * @license      {@link https://github.com/jjcapellan/Phaser3-ScrollingCamera/blob/master/LICENSE | MIT license}
- * @version      1.0.0
+ * @version      1.0.1
  */
 
 /**
