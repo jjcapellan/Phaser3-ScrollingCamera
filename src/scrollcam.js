@@ -96,6 +96,14 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
          */
         this.snapGrid = snapConfig;
 
+        /**
+         * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
+         * Internal use.
+         * @type {bool}
+         * @private
+         */
+        this.moving = false;
+
         this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
         this.snapGrid.padding = snapConfig.padding || 20;
         this.snapGrid.deadZone = (snapConfig.deadZone === undefined) ? 0.4 : snapConfig.deadZone;
@@ -121,8 +129,14 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (this.wheel) {
             this.setWheelEvent();
         }
+                
+        this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
         this.scene.cameras.addExisting(this);
+    }
+
+    resetMoving(){
+        this.moving = false;
     }
 
     setSpeed() {
@@ -143,6 +157,7 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
     downHandler() {
+        this._speed = 0;
         this._startY = this.scrollY;
         this._startTime = performance.now();
     }
@@ -151,13 +166,17 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (pointer.isDown && this.isOver(pointer)) {
             this.startY = this.scrollY;
             this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
+            this.moving = true;
         }
     }
 
     upHandler() {
         this._endY = this.scrollY;
         this._endTime = performance.now();
+        this.speed = 0;
+        if(this.moving){
         this.setSpeed();
+        }
     }
 
     wheelHandler(event) {
