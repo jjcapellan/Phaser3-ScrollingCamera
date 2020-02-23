@@ -139,6 +139,11 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.moving = false;
     }
 
+    /**
+     * Sets scroll speed. Use it to control scroll with any key or button.
+     * @param  {number} speed Speed in pixels per second.
+     * @memberof ScrollingCamera
+     */
     setSpeed(speed) {
         let t = this;
         if (typeof speed != 'number') {
