@@ -6,14 +6,14 @@ The scroll is customizable.
 Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/  
 ## Installation
 There are two alternatives:
-* Download the file [scrollcam.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.0/dist/scrollcam.min.js) to your proyect folder and add a reference in your html:
+* Download the file [scrollcam.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.2/dist/scrollcam.min.js) to your proyect folder and add a reference in your html:
 ```html
 <script src = "scrollcam.min.js"></script>
 ```  
-Or you can download the commented version: [scrollcam.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.0/dist/scrollcam.js) 
+Or you can download the commented version: [scrollcam.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.2/dist/scrollcam.js) 
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.0/dist/scrollcam.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@1.0.2/dist/scrollcam.min.js"></script>
 ```  
 ## How to use
 This is the simplest case (uses the default parameters):
@@ -43,6 +43,14 @@ let cameraOptions = {
       }
     };
 let myCamera = new ScrollingCamera(this, cameraOptions);
+```
+You can control scroll binding any button or key:
+```javascript
+// In create function ...
+let myCamera = new ScrollingCamera(this);
+let cursors = this.input.keyboard.createCursorKeys();
+cursors.down.on('down', () => myCamera.setSpeed(50));
+cursors.up.on('down', () => myCamera.setSpeed(-50));
 ```
 ## Dependencies
 Phaser 3: https://phaser.io/

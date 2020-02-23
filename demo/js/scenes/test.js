@@ -51,7 +51,7 @@ class Test extends Phaser.Scene {
     this.add.bitmapText(this.leftMargin, this.actualBottomRow, 'bmf', 'Drag your pointer in the red rectangle or use\n' +
       'the wheel of your mouse over the rectangle.', 16);
 
-    this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollingCamera v1.0.1', 16).setTint(0xdd0000);
+    this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollingCamera v1.0.2', 16).setTint(0xdd0000);
 
   }
 
@@ -106,6 +106,11 @@ class Test extends Phaser.Scene {
       cameraOptions
     );
     this.camera1.scrollX = this.camera1.getScroll(this.game.config.width / 2, 0).x;
+    
+    // Bind cursor keys to scroll
+    let cursors = this.input.keyboard.createCursorKeys();
+    cursors.down.on('down', () => this.camera1.setSpeed(200));
+    cursors.up.on('down', () => this.camera1.setSpeed(-200));
   }
 
   addPlusButton(x, y, step, limit, property, object, label) {
