@@ -5,7 +5,7 @@
  * @author       Juan Jose Capellan <soycape@hotmail.com>
  * @copyright    2019 Juan Jose Capellan
  * @license      {@link https://github.com/jjcapellan/Phaser3-ScrollingCamera/blob/master/LICENSE | MIT license}
- * @version      1.0.1
+ * @version      1.0.2
  */
 
 /**
@@ -135,15 +135,19 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.scene.cameras.addExisting(this);
     }
 
-    resetMoving(){
+    resetMoving() {
         this.moving = false;
     }
 
-    setSpeed() {
+    setSpeed(speed) {
         let t = this;
-        let distance = t._endY - t._startY; // pixels
-        let duration = (t._endTime - t._startTime) / 1000; //seconds
-        this._speed = distance / duration; // pixels/second
+        if (typeof speed != 'number') {
+            let distance = t._endY - t._startY; // pixels
+            let duration = (t._endTime - t._startTime) / 1000; //seconds
+            this._speed = distance / duration; // pixels/second
+        } else {
+            this._speed = speed;
+        }
     }
 
     setDragEvent() {
@@ -174,8 +178,8 @@ class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._endY = this.scrollY;
         this._endTime = performance.now();
         this.speed = 0;
-        if(this.moving){
-        this.setSpeed();
+        if (this.moving) {
+            this.setSpeed();
         }
     }
 
