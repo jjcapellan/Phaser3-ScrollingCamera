@@ -105,7 +105,6 @@ class Test extends Phaser.Scene {
       this,
       cameraOptions
     );
-    this.cameras.addExisting(this.camera1);
     this.camera1.scrollX = this.camera1.getScroll(this.game.config.width / 2, 0).x;
   }
 
