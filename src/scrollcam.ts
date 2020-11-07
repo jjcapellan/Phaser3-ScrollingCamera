@@ -8,7 +8,7 @@
  * @extends Phaser.Cameras.Scene2D.Camera
  */
 export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
-    
+
     //// Properties from ScrollConfig initiated in constructor
     x: number;
     y: number;
@@ -16,11 +16,14 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     height: number;
     top: number;
     bottom: number;
+    left: number;
+    right: number;
     wheel: boolean;
     drag: number;
     minSpeed: number;
     snap: boolean;
     snapGrid: SnapConfig;
+    horizontal: boolean;
 
 
     /// Properties initiated in init()
@@ -67,11 +70,14 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             height,
             top = 0,
             bottom = 5000,
+            left = 0,
+            right = 5000,
             wheel = false,
             drag = 0.95,
             minSpeed = 4,
             snap = false,
-            snapConfig = {}
+            snapConfig = {},
+            horizontal = false
         }: ScrollConfig
     ) {
         super(x, y, width, height);
@@ -83,12 +89,15 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         
         this.top = top;        
-        this.bottom = bottom - this.height;        
+        this.bottom = bottom - this.height;
+        this.left = left;
+        this.right = right - this.width;
         this.wheel = wheel;
         this.drag = drag;       
         this.minSpeed = minSpeed;
         this.snap = snap;
-        this.snapGrid = snapConfig;        
+        this.snapGrid = snapConfig;
+        this.horizontal = horizontal; 
 
         this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
         this.snapGrid.padding = snapConfig.padding || 20;
@@ -275,6 +284,8 @@ interface ScrollConfig {
      * Lower bound of the scroll
      */
     bottom?: number,
+    left?: number,
+    right?: number,
     /*
      * Does this camera use the mouse wheel?
      */
@@ -296,5 +307,9 @@ interface ScrollConfig {
     /**
      * Contains snap effect parameters. Only used if snap parameter is true
      */
-    snapConfig?: SnapConfig
+    snapConfig?: SnapConfig,
+    /**
+     * Should this camera use horizontal orientation?
+     */
+    horizontal?: boolean,
 }
