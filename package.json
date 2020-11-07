@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/jjcapellan/Phaser3-ScrollingCamera#readme",
   "devDependencies": {
-    "microbundle": "^0.12.4"
+    "microbundle": "^0.12.4",
+    "phaser": "^3.24.1"
   }
 }
