@@ -14,8 +14,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     y: number;
     width: number;
     height: number;
-    top: number;
-    bottom: number;
+    start: number;
+    end: number;
     left: number;
     right: number;
     wheel: boolean;
@@ -34,7 +34,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private _rectangle: Phaser.Geom.Rectangle;
     /** 
      * Vertical speed in pixels per second
-     * */ 
+     * */
     private _speed: number;
     /**
      * scrollY value when drag action begins
@@ -53,7 +53,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _endTime: number;
 
-    
+
     //// Properties inherited from parent class (Camera)
     private _customViewport: boolean;
     _bounds: Phaser.Geom.Rectangle;
@@ -68,10 +68,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             y = 0,
             width,
             height,
-            top = 0,
-            bottom = 5000,
-            left = 0,
-            right = 5000,
+            start = 0,
+            end = 5000,
             wheel = false,
             drag = 0.95,
             minSpeed = 4,
@@ -87,17 +85,15 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
 
-        
-        this.top = top;        
-        this.bottom = bottom - this.height;
-        this.left = left;
-        this.right = right - this.width;
+
+        this.start = start;
+        this.end = end - this.height;
         this.wheel = wheel;
-        this.drag = drag;       
+        this.drag = drag;
         this.minSpeed = minSpeed;
         this.snap = snap;
         this.snapGrid = snapConfig;
-        this.horizontal = horizontal; 
+        this.horizontal = horizontal;
 
         this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
         this.snapGrid.padding = snapConfig.padding || 20;
@@ -108,12 +104,12 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private init() {
         this.moving = false;
-        this.scrollY = this.top || this.y;
+        this.scrollY = this.start || this.y;
         this._rectangle = new Phaser.Geom.Rectangle(this.x, this.y, this.width, this.height);
-        this._speed = 0;        
-        this._startY = this.scrollY;        
-        this._endY = this.scrollY;        
-        this._startTime = 0;        
+        this._speed = 0;
+        this._startY = this.scrollY;
+        this._endY = this.scrollY;
+        this._startTime = 0;
         this._endTime = 0;
 
         //// Sets events
@@ -124,7 +120,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
-        this.scene.cameras.addExisting(this);        
+        this.scene.cameras.addExisting(this);
     } // End init()
 
 
@@ -198,7 +194,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private clampScroll() {
-        this.scrollY = Phaser.Math.Clamp(this.scrollY, this.top, this.bottom);
+        this.scrollY = Phaser.Math.Clamp(this.scrollY, this.start, this.end);
         this._endY = this.scrollY;
     }
 
@@ -209,7 +205,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (Math.abs(this._speed) < this.minSpeed) {
             this._speed = 0;
             if (this.snap && !this.scene.input.activePointer.isDown) {
-                let snapTop = this.top + this.snapGrid.topMargin;
+                let snapTop = this.start + this.snapGrid.topMargin;
                 let snapPosition = this.scrollY - snapTop;
                 let gap = this.snapGrid.padding;
                 let gapRatio = snapPosition / gap;
@@ -277,15 +273,13 @@ interface ScrollConfig {
      */
     height?: number,
     /**
-     * Upper bound of the scroll
+     * Start bound of the scroll (top for vertical orientation, left for horizontal orientation)
      */
-    top?: number,
+    start?: number,
     /**
-     * Lower bound of the scroll
+     * End bound of the scroll (bottom for vertical orientation, right for horizontal orientation)
      */
-    bottom?: number,
-    left?: number,
-    right?: number,
+    end?: number,
     /*
      * Does this camera use the mouse wheel?
      */
