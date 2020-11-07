@@ -1,29 +1,5 @@
 /// <reference path="../node_modules/phaser/types/phaser.d.ts" />
 
-import { Scene } from 'phaser';
-
-interface SnapConfig{
-    topMargin?: number,
-    padding?: number,
-    deadZone?: number
-}
-
-interface ScrollConfig{
-    x?: number,
-    y?: number,
-    width?: number,
-    height?: number,
-    top?: number,
-    bottom?: number,
-    wheel?: boolean,
-    drag?: number,
-    minSpeed?: number,
-    snap?: boolean,
-    snapConfig?: SnapConfig
-}
-
-
-
 /**
  * This type of Phaser camera can be useful to build user interfaces that require scrolling,
  * but without needing scroll bars.
@@ -32,6 +8,12 @@ interface ScrollConfig{
  * @extends Phaser.Cameras.Scene2D.Camera
  */
 export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
+    
+    //// Properties from ScrollConfig initiated in constructor
+    x: number;
+    y: number;
+    width: number;
+    height: number;
     top: number;
     bottom: number;
     wheel: boolean;
@@ -39,18 +21,42 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     minSpeed: number;
     snap: boolean;
     snapGrid: SnapConfig;
-    matrix: Phaser.GameObjects.Components.TransformMatrix; // from BaseCamera
-    culledObjects: Phaser.GameObjects.GameObject[]; // from BaseCamera
+
+
+    /// Properties initiated in init()
+    /**
+     * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
+     */
     private moving: boolean;
     private _rectangle: Phaser.Geom.Rectangle;
+    /** 
+     * Vertical speed in pixels per second
+     * */ 
     private _speed: number;
+    /**
+     * scrollY value when drag action begins
+     */
     private _startY: number;
+    /**
+     * scrollY value when drag action ends
+     */
     private _endY: number;
+    /**
+     * TimeStamp when drag action begins
+     */
     private _startTime: number;
+    /**
+     * timeStamp when drag action ends
+     */
     private _endTime: number;
-    _customViewport: boolean; // from BaseCamera
-    _bounds: Phaser.Geom.Rectangle; // from BaseCamera
+
     
+    //// Properties inherited from parent class (Camera)
+    private _customViewport: boolean;
+    _bounds: Phaser.Geom.Rectangle;
+    matrix: Phaser.GameObjects.Components.TransformMatrix;
+    culledObjects: Phaser.GameObjects.GameObject[];
+
 
     constructor(
         scene: Phaser.Scene,
@@ -75,68 +81,32 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
 
-        /**
-         * Upper bound of the scroll
-         */
-        this.top = top;
-
-        /**
-         * Lower bound of the scroll
-         */
-        this.bottom = bottom - this.height;
-
-        /**
-         * Does this camera use the mouse wheel?
-         */
+        
+        this.top = top;        
+        this.bottom = bottom - this.height;        
         this.wheel = wheel;
-
-        /**
-         * Number between 0 and 1.\n
-         * Reduces the scroll speed per game step.\n
-         * Example: 0.5 reduces 50% scroll speed per game step.
-         */
-
-        this.drag = drag;
-        /**
-         * Bellow this speed value (pixels/second), the scroll is stopped.
-         */
+        this.drag = drag;       
         this.minSpeed = minSpeed;
-
-        /**
-         * Does this camera use snap points?
-         */
         this.snap = snap;
-
-        /**
-         * Contains snap effect parameters. Only used if snap parameter is true
-         */
-        this.snapGrid = snapConfig;
-
-        /**
-         * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
-         */
-        this.moving = false;
+        this.snapGrid = snapConfig;        
 
         this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
         this.snapGrid.padding = snapConfig.padding || 20;
         this.snapGrid.deadZone = (snapConfig.deadZone === undefined) ? 0.4 : snapConfig.deadZone;
 
         this.init();
-    }
+    } // End constructor
 
-    init() {
+    private init() {
+        this.moving = false;
         this.scrollY = this.top || this.y;
         this._rectangle = new Phaser.Geom.Rectangle(this.x, this.y, this.width, this.height);
-        // Vertical speed in pixels per second
-        this._speed = 0;
-        // scrollY value when drag action begins
-        this._startY = this.scrollY;
-        // scrollY value when drag action ends
-        this._endY = this.scrollY;
-        // timeStamp when drag action begins
-        this._startTime = 0;
-        // timeStamp when drag action ends
+        this._speed = 0;        
+        this._startY = this.scrollY;        
+        this._endY = this.scrollY;        
+        this._startTime = 0;        
         this._endTime = 0;
+
         //// Sets events
         this.setDragEvent();
         if (this.wheel) {
@@ -145,17 +115,18 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
-        this.scene.cameras.addExisting(this);
-    }
+        this.scene.cameras.addExisting(this);        
+    } // End init()
 
-    resetMoving() {
+
+    private resetMoving() {
         this.moving = false;
     }
 
+
     /**
-     * Sets scroll speed. Use it to control scroll with any key or button.
-     * @param  {number} speed Speed in pixels per second.
-     * @memberof ScrollingCamera
+     * Sets scroll speed in pixels/second. Use it to control scroll with any key or button.
+     * @param { numer } [speed] 
      */
     setSpeed(speed?: number) {
         let t = this;
@@ -168,53 +139,60 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         }
     }
 
-    setDragEvent() {
+
+    private setDragEvent() {
         this.scene.input.on('pointermove', this.dragHandler, this);
         this.scene.input.on('pointerup', this.upHandler, this);
         this.scene.input.on('pointerdown', this.downHandler, this);
     }
 
-    setWheelEvent() {
+
+    private setWheelEvent() {
         window.addEventListener('wheel', this.wheelHandler.bind(this));
     }
 
-    downHandler() {
+
+    private downHandler() {
         this._speed = 0;
         this._startY = this.scrollY;
         this._startTime = performance.now();
     }
 
-    dragHandler(pointer) {
+
+    private dragHandler(pointer) {
         if (pointer.isDown && this.isOver(pointer)) {
-            //this._startY = this.scrollY; //<---
             this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
             this.moving = true;
         }
     }
 
-    upHandler() {
+
+    private upHandler() {
         this._endY = this.scrollY;
         this._endTime = performance.now();
-        //this._speed = 0;
         if (this.moving) {
             this.setSpeed();
         }
     }
 
-    wheelHandler(event) {
+
+    private wheelHandler(event) {
         if (this.isOver(this.scene.input.activePointer)) {
             this.scrollY += event.deltaY;
         }
     }
 
-    isOver(pointer) {
+
+    private isOver(pointer) {
         return this._rectangle.contains(pointer.x, pointer.y);
     }
 
-    clampScroll() {
+
+    private clampScroll() {
         this.scrollY = Phaser.Math.Clamp(this.scrollY, this.top, this.bottom);
         this._endY = this.scrollY;
     }
+
 
     update(time, delta) {
         this.scrollY += this._speed * (delta / 1000);
@@ -233,8 +211,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             }
         }
         this.clampScroll();
-
     }
+
 
     destroy() {
         this.emit(Phaser.Cameras.Scene2D.Events.DESTROY, this);
@@ -243,7 +221,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.matrix.destroy();
         this.culledObjects = [];
         if (this._customViewport) {
-            //  We're turning off a custom viewport for this Camera
             this.sceneManager.customViewports--;
         }
         this._bounds = null;
@@ -252,34 +229,72 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.sceneManager = null;
 
     }
+} // End class
+
+
+
+interface SnapConfig {
+    /**
+     * Position y of the first snap point from the top.
+     */
+    topMargin?: number,
+    /**
+     * Vertical distance in pixels between snap points.
+     */
+    padding?: number,
+    /**
+     * % of space between two snap points not influenced by snap effect.\n
+     */
+    deadZone?: number
 }
 
-// ************************ TYPE DEFINITIONS *************************************
-// *******************************************************************************
 
-/**
- * Contains snap effect parameters
- * @typedef  {object} snapConfig
- * @property  {number} [topMargin = 0] Position y of the first snap point from the top.
- * @property  {number} [padding = 20] Vertical distance in pixels between snap points.
- * @property  {number} [deadZone = 0] % of space between two snap points not influenced by snap effect.\n
- * Example: 0.2 means 20% of middle space between two snap points is free of snap effect.
- */
 
-/**
- * Contains all cameraScroll parameters
- * @typedef  {object} scrollConfig
- * @property  {number} [x = 0] The x position of this camera
- * @property  {number} [y = 0] The y position of this camera
- * @property  {number} [width = Phaser.game.config.width] The width of this camera
- * @property  {number} [height = Phaser.game.config.height] The height of this camera
- * @property  {number} [top = 0] Upper bound of the scroll
- * @property  {number} [bottom = 5000] Lower bound of the scroll
- * @property  {bool} [wheel = false] Does this camera use the mouse wheel?
- * @property  {number} [drag = 0.95] Number between 0 and 1.\n
- * Reduces the scroll speed per game step.\n
- * Example: 0.5 reduces 50% scroll speed per game step
- * @property  {number} [minSpeed] Bellow this speed value (pixels/second), the scroll is stopped
- * @property  {bool} [snap = false] Does this camera use snap points?
- * @property  {snapConfig} [snapConfig] Contains snap effect parameters. Only used if snap parameter is true
- */
+interface ScrollConfig {
+    /**
+     * The x position of this camera
+     */
+    x?: number,
+    /**
+     * The y position of this camera
+     */
+    y?: number,
+    /**
+     * The width of this camera
+     */
+    width?: number,
+    /**
+     * The height of this camera
+     */
+    height?: number,
+    /**
+     * Upper bound of the scroll
+     */
+    top?: number,
+    /**
+     * Lower bound of the scroll
+     */
+    bottom?: number,
+    /*
+     * Does this camera use the mouse wheel?
+     */
+    wheel?: boolean,
+    /**
+     * Number between 0 and 1.
+     * Reduces the scroll speed per game step.
+     * Example: 0.5 reduces 50% scroll speed per game step.
+     */
+    drag?: number,
+    /**
+     * Bellow this speed value (pixels/second), the scroll is stopped
+     */
+    minSpeed?: number,
+    /**
+     * Does this camera use snap points?
+     */
+    snap?: boolean,
+    /**
+     * Contains snap effect parameters. Only used if snap parameter is true
+     */
+    snapConfig?: SnapConfig
+}
