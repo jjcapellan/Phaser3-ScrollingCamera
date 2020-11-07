@@ -1,0 +1,31 @@
+{
+  "name": "phaser-scrolling-camera",
+  "version": "1.0.2",
+  "description": "Class for Phaser 3 framework, adding the capacity of vertical scrolling by dragging or using the mouse wheel.",
+  "main": "scrollcam.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjcapellan/Phaser3-ScrollingCamera.git"
+  },
+  "keywords": [
+    "phaser3",
+    "phaser",
+    "camera",
+    "scroll",
+    "drag",
+    "mouse",
+    "wheel"
+  ],
+  "author": "Juan Jose Capellan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jjcapellan/Phaser3-ScrollingCamera/issues"
+  },
+  "homepage": "https://github.com/jjcapellan/Phaser3-ScrollingCamera#readme",
+  "devDependencies": {
+    "microbundle": "^0.12.4"
+  }
+}
