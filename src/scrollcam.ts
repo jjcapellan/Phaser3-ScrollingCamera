@@ -1,5 +1,7 @@
 /// <reference path="../node_modules/phaser/types/phaser.d.ts" />
 
+
+
 /**
  * This type of Phaser camera can be useful to build user interfaces that require scrolling,
  * but without needing scroll bars.
@@ -26,6 +28,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     horizontal: boolean;
 
 
+
     /// Properties initiated in init()
     /**
      * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
@@ -37,13 +40,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * */
     private _speed: number;
     /**
-     * scrollY value when drag action begins
+     * scroll value when drag action begins
      */
-    private _startY: number;
+    private _start: number;
     /**
-     * scrollY value when drag action ends
+     * scroll value when drag action ends
      */
-    private _endY: number;
+    private _end: number;
     /**
      * TimeStamp when drag action begins
      */
@@ -52,6 +55,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * timeStamp when drag action ends
      */
     private _endTime: number;
+    private _scrollProp: string;
 
 
     //// Properties inherited from parent class (Camera)
@@ -104,13 +108,15 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private init() {
         this.moving = false;
-        this.scrollY = this.start || this.y;
+        this.scrollX = this.horizontal ? (this.start || this.x) : this.x;
+        this.scrollY = this.horizontal ? this.y : (this.start || this.y);
         this._rectangle = new Phaser.Geom.Rectangle(this.x, this.y, this.width, this.height);
         this._speed = 0;
-        this._startY = this.scrollY;
-        this._endY = this.scrollY;
+        this._start = this.scrollY;
+        this._end = this.scrollY;
         this._startTime = 0;
         this._endTime = 0;
+        this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
 
         //// Sets events
         this.setDragEvent();
@@ -138,7 +144,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (speed) {
             this._speed = speed;
         } else {
-            let distance = t._endY - t._startY; // pixels
+            let distance = t._end - t._start; // pixels
             let duration = (t._endTime - t._startTime) / 1000; //seconds
             this._speed = distance / duration; // pixels/second
         }
@@ -158,22 +164,27 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private downHandler() {
+        const prop = this._scrollProp;
         this._speed = 0;
-        this._startY = this.scrollY;
+        this._start = this[prop];
         this._startTime = performance.now();
     }
 
 
     private dragHandler(pointer) {
         if (pointer.isDown && this.isOver(pointer)) {
-            this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
+            if (this.horizontal) {
+                this.scrollX -= (pointer.position.x - pointer.prevPosition.x);
+            } else {
+                this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
+            }
             this.moving = true;
         }
     }
 
 
     private upHandler() {
-        this._endY = this.scrollY;
+        this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
         if (this.moving) {
             this.setSpeed();
@@ -183,7 +194,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private wheelHandler(event) {
         if (this.isOver(this.scene.input.activePointer)) {
-            this.scrollY += event.deltaY;
+            const prop = this._scrollProp;
+            this[prop] += event.deltaY;
         }
     }
 
@@ -194,24 +206,27 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private clampScroll() {
-        this.scrollY = Phaser.Math.Clamp(this.scrollY, this.start, this.end);
-        this._endY = this.scrollY;
+        const prop = this._scrollProp;
+        this[prop] = Phaser.Math.Clamp(this[prop], this.start, this.end);
+        this._end = this[prop];
     }
 
 
     update(time, delta) {
-        this.scrollY += this._speed * (delta / 1000);
+        const prop = this._scrollProp;
+        this[prop] += this._speed * (delta / 1000);
+
         this._speed *= this.drag;
         if (Math.abs(this._speed) < this.minSpeed) {
             this._speed = 0;
             if (this.snap && !this.scene.input.activePointer.isDown) {
                 let snapTop = this.start + this.snapGrid.topMargin;
-                let snapPosition = this.scrollY - snapTop;
+                let snapPosition = this[prop] - snapTop;
                 let gap = this.snapGrid.padding;
                 let gapRatio = snapPosition / gap;
                 let gapRatioRemain = gapRatio % 1;
                 if (Math.abs(0.5 - gapRatioRemain) >= this.snapGrid.deadZone / 2) {
-                    this.scrollY = snapTop + Math.round(gapRatio) * gap;
+                    this[prop] = snapTop + Math.round(gapRatio) * gap;
                 }
             }
         }
