@@ -62,7 +62,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * stores the snap index (0 ,1 , 2, ...)
      */
-    snapPositon: number;
+    snapIndex: number;
 
 
     //// Properties inherited from parent class (Camera)
@@ -124,6 +124,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._startTime = 0;
         this._endTime = 0;
         this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
+        this.snapIndex = 0;
 
         //// Sets events
         this.setDragEvent();
@@ -227,13 +228,15 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (Math.abs(this._speed) < this.minSpeed) {
             this._speed = 0;
             if (this.snap && !this.scene.input.activePointer.isDown) {
-                let snapTop = this.start + this.snapGrid.topMargin;
-                let snapPosition = this[prop] - snapTop;
-                let gap = this.snapGrid.padding;
-                let gapRatio = snapPosition / gap;
-                let gapRatioRemain = gapRatio % 1;
+                const snapTop = this.start + this.snapGrid.topMargin;
+                const snapPosition = this[prop] - snapTop;
+                const gap = this.snapGrid.padding;
+                const gapRatio = snapPosition / gap;
+                const gapRatioRemain = gapRatio % 1;
+                //// Snap
                 if (Math.abs(0.5 - gapRatioRemain) >= this.snapGrid.deadZone / 2) {
                     this[prop] = snapTop + Math.round(gapRatio) * gap;
+                    this.emit('snap', )
                 }
             }
         }
