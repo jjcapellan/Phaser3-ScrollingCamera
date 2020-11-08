@@ -48,13 +48,16 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _end: number;
     /**
-     * TimeStamp when drag action begins
+     * timeStamp when drag action begins
      */
     private _startTime: number;
     /**
      * timeStamp when drag action ends
      */
     private _endTime: number;
+    /**
+     * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
+     */
     private _scrollProp: string;
 
 
