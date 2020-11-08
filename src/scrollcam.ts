@@ -236,11 +236,18 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
                 //// Snap
                 if (Math.abs(0.5 - gapRatioRemain) >= this.snapGrid.deadZone / 2) {
                     this[prop] = snapTop + Math.round(gapRatio) * gap;
-                    this.emit('snap', )
+                    this.snapIndex = this.getSnapIndex(this[prop], snapTop, gap);
+                    this.emit('snap', this.snapIndex);
                 }
             }
         }
         this.clampScroll();
+    }
+
+
+    private getSnapIndex(scrollPos: number, snapTop: number, gap: number){
+        let snapIdx = Math.round((scrollPos - snapTop)/gap);
+        return snapIdx;
     }
 
 
