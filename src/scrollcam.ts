@@ -56,9 +56,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _endTime: number;
     /**
-     * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
+     * stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
      */
     private _scrollProp: string;
+    /**
+     * stores the snap index (0 ,1 , 2, ...)
+     */
+    snapPositon: number;
 
 
     //// Properties inherited from parent class (Camera)
