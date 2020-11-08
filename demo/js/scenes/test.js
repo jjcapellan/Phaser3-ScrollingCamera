@@ -113,7 +113,6 @@ class Test extends Phaser.Scene {
       wheel: true,      // Use mouse wheel?
       snap: true,       // Use snap points?
       snapConfig: {     // Defines snap points
-        topMargin: 50,
         padding: 50,
         deadZone: 0     // % of space between points with not influenced by snap effect (0 - 1)
       }
@@ -123,6 +122,8 @@ class Test extends Phaser.Scene {
       cameraOptions
     );
     this.camera1.scrollX = this.camera1.getScroll(this.game.config.width / 2, 0).x;
+
+    this.camera1.on('snap', (snapIdx) => {console.log(snapIdx);});
 
     // Bind cursor keys to scroll
     let cursors = this.input.keyboard.createCursorKeys();
@@ -142,7 +143,6 @@ class Test extends Phaser.Scene {
       wheel: true,      // Use mouse wheel?
       snap: true,       // Use snap points?
       snapConfig: {     // Defines snap points
-        topMargin: 50,
         padding: 50,
         deadZone: 0     // % of space between points with not influenced by snap effect (0 - 1)
       },

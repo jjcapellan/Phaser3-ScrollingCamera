@@ -39,14 +39,25 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _end;
     /**
-     * TimeStamp when drag action begins
+     * timeStamp when drag action begins
      */
     private _startTime;
     /**
      * timeStamp when drag action ends
      */
     private _endTime;
+    /**
+     * stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
+     */
     private _scrollProp;
+    /**
+     * snap state
+     */
+    isOnSnap: boolean;
+    /**
+     * stores the snap index (0 ,1 , 2, ...)
+     */
+    snapIndex: number;
     private _customViewport;
     _bounds: Phaser.Geom.Rectangle;
     matrix: Phaser.GameObjects.Components.TransformMatrix;
@@ -68,13 +79,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private isOver;
     private clampScroll;
     update(time: any, delta: any): void;
+    private getSnapIndex;
     destroy(): void;
 }
 interface SnapConfig {
-    /**
-     * Position y of the first snap point from the top.
-     */
-    topMargin?: number;
     /**
      * Vertical distance in pixels between snap points.
      */

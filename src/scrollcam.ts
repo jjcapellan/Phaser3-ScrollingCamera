@@ -60,6 +60,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _scrollProp: string;
     /**
+     * snap state
+     */
+    isOnSnap: boolean;
+    /**
      * stores the snap index (0 ,1 , 2, ...)
      */
     snapIndex: number;
@@ -106,7 +110,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.snapGrid = snapConfig;
         this.horizontal = horizontal;
 
-        this.snapGrid.topMargin = (snapConfig.topMargin === undefined) ? 0 : snapConfig.topMargin;
         this.snapGrid.padding = snapConfig.padding || 20;
         this.snapGrid.deadZone = (snapConfig.deadZone === undefined) ? 0.4 : snapConfig.deadZone;
 
@@ -124,6 +127,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._startTime = 0;
         this._endTime = 0;
         this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
+        this.isOnSnap = false;
         this.snapIndex = 0;
 
         //// Sets events
@@ -194,6 +198,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private upHandler() {
         this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
+        this.isOnSnap = false;
         if (this.moving) {
             this.setSpeed();
         }
@@ -225,10 +230,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this[prop] += this._speed * (delta / 1000);
 
         this._speed *= this.drag;
-        if (Math.abs(this._speed) < this.minSpeed) {
+        if (Math.abs(this._speed) < this.minSpeed && !this.isOnSnap) {
             this._speed = 0;
             if (this.snap && !this.scene.input.activePointer.isDown) {
-                const snapTop = this.start + this.snapGrid.topMargin;
+                const snapTop = this.start;
                 const snapPosition = this[prop] - snapTop;
                 const gap = this.snapGrid.padding;
                 const gapRatio = snapPosition / gap;
@@ -237,6 +242,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
                 if (Math.abs(0.5 - gapRatioRemain) >= this.snapGrid.deadZone / 2) {
                     this[prop] = snapTop + Math.round(gapRatio) * gap;
                     this.snapIndex = this.getSnapIndex(this[prop], snapTop, gap);
+                    this.isOnSnap = true;
                     this.emit('snap', this.snapIndex);
                 }
             }
@@ -271,10 +277,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
 interface SnapConfig {
-    /**
-     * Position y of the first snap point from the top.
-     */
-    topMargin?: number,
     /**
      * Vertical distance in pixels between snap points.
      */
