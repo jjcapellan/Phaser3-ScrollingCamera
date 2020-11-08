@@ -22,10 +22,13 @@ class Test extends Phaser.Scene {
     this.letterWidth = bmf.width;
     bmf.destroy();
 
-    this.makeContent();
-    this.makeGraphics();
-    this.makeScrollCamera();
+    this.makeVerticalContent();
+    this.makeHorizontalContent();
+
+    this.makeVerticalScrollCamera();
+    this.makeHorizontalScrollCamera();
     this.makeUI();
+    this.makeGraphics();
   }
 
   makeUI() {
@@ -48,14 +51,14 @@ class Test extends Phaser.Scene {
 
     this.actualBottomRow += this.paddingY * 3;
 
-    this.add.bitmapText(this.leftMargin, this.actualBottomRow, 'bmf', 'Drag your pointer in the red rectangle or use\n' +
+    this.add.bitmapText(this.leftMargin, this.actualBottomRow, 'bmf', 'Drag your pointer in the red rectangles or use\n' +
       'the wheel of your mouse over the rectangle.', 16);
 
     this.add.bitmapText(this.camera1.x, this.camera1.y + this.camera1.height + 10, 'bmf', 'ScrollingCamera v1.0.2', 16).setTint(0xdd0000);
 
   }
 
-  makeContent() {
+  makeVerticalContent() {
     let top = this.game.config.height;
     let gameWidth = this.game.config.width;
     let centerX = gameWidth / 2;
@@ -73,7 +76,19 @@ class Test extends Phaser.Scene {
       this.add.text(centerX, y, str, textStyle)
         .setOrigin(0.5);
     }
+  }
 
+  makeHorizontalContent() {
+    let g = this.g;
+    let left = 800;
+    let textStyle = { fontFamily: 'Arial', fontSize: 26, color: '#ffffff' };
+    g.lineStyle(2, 0xdd0000);
+    for (let i = 0; i < 30; i++) {
+      let x = left + 50 * i;
+      g.lineBetween(x, 440, x, 495);
+      //g.lineBetween(x + 25, 480, x + 25, 455);
+      this.add.text(x + 25, 460, i, textStyle)
+    }
   }
 
   makeGraphics() {
@@ -83,22 +98,24 @@ class Test extends Phaser.Scene {
     g.fillStyle(0xdd0000, 1);
     g.fillTriangle(80, 290, 80, 310, 120, 300);
     g.fillTriangle(320, 290, 320, 310, 280, 300);
+
+    g.strokeRect(this.leftMargin, 380, 800 - this.rightMargin - this.leftMargin, 600 - 380 - 45);
   }
 
-  makeScrollCamera() {
+  makeVerticalScrollCamera() {
     let cameraOptions = {
       x: 50,
       y: 50,
       width: 300,
       height: 500,
-      top: 600,          // Top bound of scroll
-      bottom: 3175,      // Bottom bound of scroll
-      wheel: true,       // Use mouse wheel?
-      snap: true,        // Use snap points?
-      snapConfig: {        // Defines snap points
+      start: 600,       // Top bound of scroll
+      end: 3175,        // Bottom bound of scroll
+      wheel: true,      // Use mouse wheel?
+      snap: true,       // Use snap points?
+      snapConfig: {     // Defines snap points
         topMargin: 50,
         padding: 50,
-        deadZone: 0      // % of space between points with not influenced by snap effect (0 - 1)
+        deadZone: 0     // % of space between points with not influenced by snap effect (0 - 1)
       }
     };
     this.camera1 = new ScrollingCamera(
@@ -106,11 +123,37 @@ class Test extends Phaser.Scene {
       cameraOptions
     );
     this.camera1.scrollX = this.camera1.getScroll(this.game.config.width / 2, 0).x;
-    
+
     // Bind cursor keys to scroll
     let cursors = this.input.keyboard.createCursorKeys();
     cursors.down.on('down', () => this.camera1.setSpeed(200));
     cursors.up.on('down', () => this.camera1.setSpeed(-200));
+  }
+
+  makeHorizontalScrollCamera(){
+    let t = this;
+    let cameraOptions = {
+      x: t.leftMargin,
+      y: 380,
+      width: 800 - t.rightMargin - t.leftMargin,
+      height: 175,
+      start: 800,       // Top bound of scroll
+      end: 2000,        // Bottom bound of scroll
+      wheel: true,      // Use mouse wheel?
+      snap: true,       // Use snap points?
+      snapConfig: {     // Defines snap points
+        topMargin: 50,
+        padding: 50,
+        deadZone: 0     // % of space between points with not influenced by snap effect (0 - 1)
+      },
+      horizontal: true
+    };
+
+    this.camerah = new ScrollingCamera(
+      this,
+      cameraOptions
+    );
+    this.camerah.scrollY = 380;
   }
 
   addPlusButton(x, y, step, limit, property, object, label) {
