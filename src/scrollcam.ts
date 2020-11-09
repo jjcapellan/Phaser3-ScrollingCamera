@@ -209,6 +209,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (this.isOver(this.scene.input.activePointer)) {
             const prop = this._scrollProp;
             this[prop] += event.deltaY;
+            this.isOnSnap = false;
         }
     }
 
