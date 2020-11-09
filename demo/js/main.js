@@ -4,29 +4,23 @@ function runGame() {
     width: 800,
     height: 600,
     parent: 'game',
-    backgroundColor: 0x000000,
-    scene: [Test]
+    backgroundColor: 0xf2f0e1,
+    scale: {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    physics: {
+      default: 'arcade',
+      arcade: {
+        debug: false
+      }
+    },
+    scene: [LoadScreen, Test]
   };
 
-  var game = new Phaser.Game(config);
+  new Phaser.Game(config);
 }
 
 window.onload = function () {
   runGame();
-  resize();
-  window.addEventListener('resize', resize);
 };
-
-function resize() {
-  let gameRatio = 600 / 800;
-  let windowRatio = window.innerHeight / window.innerWidth;
-  let canvas = document.getElementsByTagName('canvas')[0];
-
-  if (gameRatio > windowRatio) {
-    canvas.style.height = window.innerHeight + 'px';
-    canvas.style.width = window.innerHeight / gameRatio + 'px';
-  } else {
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerWidth * gameRatio + 'px';
-  }
-}

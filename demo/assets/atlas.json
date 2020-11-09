@@ -1,0 +1,37 @@
+{
+    "frames": {
+      "body": {
+        "frame": { "x": 0, "y": 0, "w": 800, "h": 600 }
+      },
+      "param-shade": {
+        "frame": { "x": 0, "y": 1000, "w": 240, "h": 80 }
+      },
+      "value-shade": {
+        "frame": { "x": 0, "y": 920, "w": 100, "h": 60 }
+      },
+      "horizontal-shade": {
+        "frame": { "x": 0, "y": 740, "w": 480, "h": 160 }
+      },
+      "bt-snap-off": {
+        "frame": { "x": 120, "y": 920, "w": 88, "h": 48 }
+      },
+      "bt-snap-on": {
+        "frame": { "x": 220, "y": 920, "w": 88, "h": 48 }
+      },
+      "content": {
+        "frame": { "x": 820, "y": 0, "w": 125, "h": 1120 }
+      },
+      "drag": {
+        "frame": { "x": 0, "y": 620, "w": 800, "h": 45 }
+      },
+      "minspeed": {
+        "frame": { "x": 0, "y": 680, "w": 800, "h": 45 }
+      },
+      "value-background": {
+        "frame": { "x": 720, "y": 620, "w": 80, "h": 45 }
+      }
+    },
+    "meta": {
+      "image": "scrolling-camera-atlas.png"
+    }
+  }

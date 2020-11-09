@@ -79,6 +79,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private isOver;
     private clampScroll;
     update(time: any, delta: any): void;
+    private checkBounds;
     private getSnapIndex;
     destroy(): void;
 }
