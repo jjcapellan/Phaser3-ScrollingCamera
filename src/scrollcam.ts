@@ -102,7 +102,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
         this.start = start;
-        this.end = end - this.height;
+        this.end = end - (horizontal ? this.width : this.height);
         this.wheel = wheel;
         this.drag = drag;
         this.minSpeed = minSpeed;
