@@ -228,8 +228,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     update(time, delta) {
         const prop = this._scrollProp;
         this[prop] += this._speed * (delta / 1000);
-
         this._speed *= this.drag;
+
+        if (!this.isOnSnap) {
+            this.checkBounds();
+        }
+
+
         if (Math.abs(this._speed) < this.minSpeed && !this.isOnSnap) {
             this._speed = 0;
             if (this.snap && !this.scene.input.activePointer.isDown) {
@@ -250,9 +255,21 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.clampScroll();
     }
 
+    private checkBounds() {
+        const prop = this._scrollProp;
 
-    private getSnapIndex(scrollPos: number, snapTop: number, gap: number){
-        let snapIdx = Math.round((scrollPos - snapTop)/gap);
+        if (this[prop] <= this.start) {
+            this[prop] = this.start;
+            this._speed = 0;
+        } else if (this[prop] >= this.end) {
+            this[prop] = this.end;
+            this._speed = 0;
+        }
+    }
+
+
+    private getSnapIndex(scrollPos: number, snapTop: number, gap: number) {
+        let snapIdx = Math.round((scrollPos - snapTop) / gap);
         return snapIdx;
     }
 
