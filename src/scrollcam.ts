@@ -36,35 +36,35 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private moving: boolean;
     private _rectangle: Phaser.Geom.Rectangle;
     /** 
-     * Vertical speed in pixels per second
+     * Scroll speed in pixels per second
      * */
     private _speed: number;
     /**
-     * scroll value when drag action begins
+     * Scroll value when drag action begins
      */
     private _start: number;
     /**
-     * scroll value when drag action ends
+     * Scroll value when drag action ends
      */
     private _end: number;
     /**
-     * timeStamp when drag action begins
+     * TimeStamp when drag action begins
      */
     private _startTime: number;
     /**
-     * timeStamp when drag action ends
+     * TimeStamp when drag action ends
      */
     private _endTime: number;
     /**
-     * stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
+     * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
      */
     private _scrollProp: string;
     /**
-     * snap state
+     * Snap state
      */
     isOnSnap: boolean;
     /**
-     * stores the snap index (0 ,1 , 2, ...)
+     * Stores the snap index (0 ,1 , 2, ...)
      */
     snapIndex: number;
 
