@@ -35,6 +35,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private moving: boolean;
     private _rectangle: Phaser.Geom.Rectangle;
+    /**
+     * Receives input. Allows this camera be interactive even behind the main camera
+     */
+    private _zone: Phaser.GameObjects.Zone;
     /** 
      * Scroll speed in pixels per second
      * */
@@ -67,6 +71,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Stores the snap index (0 ,1 , 2, ...)
      */
     snapIndex: number;
+    
 
 
     //// Properties inherited from parent class (Camera)
@@ -121,6 +126,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.scrollX = this.horizontal ? (this.start || this.x) : this.x;
         this.scrollY = this.horizontal ? this.y : (this.start || this.y);
         this._rectangle = new Phaser.Geom.Rectangle(this.x, this.y, this.width, this.height);
+        this._zone = this.scene.add.zone(this.x, this.y, this.width, this.height).setOrigin(0).setInteractive();
         this._speed = 0;
         this._start = this.scrollY;
         this._end = this.scrollY;
@@ -163,10 +169,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
-    private setDragEvent() {
-        this.scene.input.on('pointermove', this.dragHandler, this);
-        this.scene.input.on('pointerup', this.upHandler, this);
-        this.scene.input.on('pointerdown', this.downHandler, this);
+    private setDragEvent() {        
+        this._zone.on('pointermove', this.dragHandler, this);
+        this._zone.on('pointerup', this.upHandler, this);
+        this._zone.on('pointerout', this.upHandler, this);
+        this._zone.on('pointerdown', this.downHandler, this);
     }
 
 
