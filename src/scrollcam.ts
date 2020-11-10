@@ -34,7 +34,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
      */
     private moving: boolean;
-    private _rectangle: Phaser.Geom.Rectangle;
     /**
      * Receives input. Allows this camera be interactive even behind the main camera
      */
@@ -71,7 +70,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Stores the snap index (0 ,1 , 2, ...)
      */
     snapIndex: number;
-    
+
 
 
     //// Properties inherited from parent class (Camera)
@@ -125,7 +124,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.moving = false;
         this.scrollX = this.horizontal ? (this.start || this.x) : this.x;
         this.scrollY = this.horizontal ? this.y : (this.start || this.y);
-        this._rectangle = new Phaser.Geom.Rectangle(this.x, this.y, this.width, this.height);
         this._zone = this.scene.add.zone(this.x, this.y, this.width, this.height).setOrigin(0).setInteractive();
         this._speed = 0;
         this._start = this.scrollY;
@@ -138,9 +136,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         //// Sets events
         this.setDragEvent();
-        if (this.wheel) {
-            
-        }
 
         this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
@@ -169,12 +164,14 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
-    private setDragEvent() {        
+    private setDragEvent() {
         this._zone.on('pointermove', this.dragHandler, this);
         this._zone.on('pointerup', this.upHandler, this);
         this._zone.on('pointerout', this.upHandler, this);
         this._zone.on('pointerdown', this.downHandler, this);
-        this._zone.on('wheel', this.wheelHandler, this);
+        if (this.wheel) {
+            this._zone.on('wheel', this.wheelHandler, this);
+        }
     }
 
 
@@ -187,7 +184,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private dragHandler(pointer) {
-        if (pointer.isDown && this.isOver(pointer)) {
+        if (pointer.isDown) {
             if (this.horizontal) {
                 this.scrollX -= (pointer.position.x - pointer.prevPosition.x);
             } else {
@@ -209,16 +206,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private wheelHandler(event) {
-        if (this.isOver(this.scene.input.activePointer)) {
-            const prop = this._scrollProp;
-            this[prop] += event.deltaY;
-            this.isOnSnap = false;
-        }
-    }
-
-
-    private isOver(pointer) {
-        return this._rectangle.contains(pointer.x, pointer.y);
+        const prop = this._scrollProp;
+        this[prop] += event.deltaY;
+        this.isOnSnap = false;
     }
 
 
