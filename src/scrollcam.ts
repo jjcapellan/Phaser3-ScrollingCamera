@@ -135,7 +135,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.snapIndex = 0;
 
         //// Sets events
-        this.setDragEvent();
+        this.setEvents();
 
         this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
 
@@ -164,7 +164,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
-    private setDragEvent() {
+    private setEvents() {
         this._zone.on('pointermove', this.dragHandler, this);
         this._zone.on('pointerup', this.upHandler, this);
         this._zone.on('pointerout', this.upHandler, this);
