@@ -59,9 +59,9 @@ class Test extends Phaser.Scene {
     this.button.on('pointerdown', () => {
       this.button.switchState();
       if(this.button.pressed){
-        this.camera2.snap = true;
+        this.camera2.snap.enable = true;
       } else {
-        this.camera2.snap = false;
+        this.camera2.snap.enable = false;
         this.txtValue.setText('--');
       }
     });
@@ -108,10 +108,9 @@ class Test extends Phaser.Scene {
       start: 300,
       end: 300 + 1120,
       wheel: true,
-      snap: true,
-      snapConfig: {
-        padding: 60,
-        deadZone: 0
+      snap: {
+        enable: true,
+        padding: 60
       },
       horizontal: true
     }
@@ -128,10 +127,9 @@ class Test extends Phaser.Scene {
       height: 45,
       start: 540,
       end: 540 + 800,
-      snap: true,
-      snapConfig: {
-        padding: 80,
-        deadZone: 0
+      snap: {
+        enable: true,
+        padding: 80
       },
       horizontal: true
     }
@@ -148,10 +146,9 @@ class Test extends Phaser.Scene {
       height: 45,
       start: 540,
       end: 540 + 800,
-      snap: true,
       snapConfig: {
-        padding: 40,
-        deadZone: 0
+        enable: true,
+        padding: 40
       },
       horizontal: true
     }
