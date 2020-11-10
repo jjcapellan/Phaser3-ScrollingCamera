@@ -91,8 +91,11 @@ class Test extends Phaser.Scene {
       y: 100,
       width: 120,
       height: 450,
-      start: 100,
-      end: 100 + 1120
+      contentBounds: {
+        x: 60,
+        y: 100,
+        height: 1120
+      }
     }
 
     this.camera1 = new ScrollingCamera(this, config);
@@ -105,8 +108,11 @@ class Test extends Phaser.Scene {
       y: 600 - 60 - 120,
       width: 450,
       height: 120,
-      start: 300,
-      end: 300 + 1120,
+      contentBounds: {
+        x: 300,
+        y: 600 - 60 - 120,
+        width: 1120
+      },
       wheel: true,
       snap: {
         enable: true,
@@ -125,8 +131,11 @@ class Test extends Phaser.Scene {
       y: 140,
       width: 200,
       height: 45,
-      start: 540,
-      end: 540 + 800,
+      contentBounds: {
+        x: 540,
+        y: 140,
+        width: 800
+      },
       snap: {
         enable: true,
         padding: 80
@@ -144,8 +153,11 @@ class Test extends Phaser.Scene {
       y: 220,
       width: 200,
       height: 45,
-      start: 540,
-      end: 540 + 800,
+      contentBounds: {
+        x: 540,
+        y: 220,
+        width: 800
+      },
       snap: {
         enable: true,
         padding: 40

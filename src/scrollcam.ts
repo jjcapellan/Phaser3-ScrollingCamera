@@ -2,6 +2,8 @@
 
 
 
+
+
 /**
  * This type of Phaser camera can be useful to build user interfaces that require scrolling,
  * but without needing scroll bars.
@@ -11,15 +13,19 @@
  */
 export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
-    //// Properties from ScrollConfig initiated in constructor
+    //// Properties from ScrollConfig or initiated in constructor
     x: number;
     y: number;
     width: number;
     height: number;
+    cBounds:{
+        x: number,
+        y: number,
+        width?: number,
+        height?: number
+    }
     start: number;
     end: number;
-    left: number;
-    right: number;
     wheel: boolean;
     drag: number;
     snap: SnapConfig;
@@ -34,7 +40,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private moving: boolean;
     /**
      * Receives input. Allows this camera be interactive even behind the main camera
-     */
+     */    
     private _zone: Phaser.GameObjects.Zone;
     /** 
      * Scroll speed in pixels per second
@@ -94,8 +100,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             y = 0,
             width,
             height,
-            start = 0,
-            end = 5000,
+            contentBounds,
             wheel = false,
             drag = 0.95,
             snap = { enable: false },
@@ -103,15 +108,26 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         }: ScrollConfig
     ) {
         super(x, y, width, height);
+
         this.scene = scene;
         this.x = x;
         this.y = y;
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
+        
+        let cBounds = contentBounds || { x: this.x, y: this.y};
+        if(horizontal){
+            cBounds.height = this.height;
+            cBounds.width = cBounds.width || 5000;
+            this.start = cBounds.x;
+            this.end = cBounds.x + cBounds.width - this.width;
+        } else {
+            cBounds.height = cBounds.height || 5000;
+            cBounds.width = this.width;
+            this.start = cBounds.y;
+            this.end = cBounds.y + cBounds.height - this.height;
+        }
 
-
-        this.start = start;
-        this.end = end - (horizontal ? this.width : this.height);
         this.wheel = wheel;
         this.drag = drag;
         this.snap = snap;
@@ -121,6 +137,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         this.init();
     } // End constructor
+
+    
 
     private init() {
         this.moving = false;
@@ -147,7 +165,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.setEvents();
 
         this.scene.cameras.addExisting(this);
+
     } // End init()
+
 
 
     /**
@@ -166,6 +186,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     } // End setSpeed()
 
 
+
     private setEvents() {
         this._zone.on('pointermove', this.dragHandler, this);
         this._zone.on('pointerup', this.upHandler, this);
@@ -177,6 +198,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
+
     private downHandler() {
         const prop = this._scrollProp;
         this._speed = 0;
@@ -184,6 +206,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._start = this[prop];
         this._startTime = performance.now();
     }
+
 
 
     private dragHandler(pointer) {
@@ -198,6 +221,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
+
     private upHandler() {
         this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
@@ -209,6 +233,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
+
     private wheelHandler(event) {
         const prop = this._scrollProp;
         this[prop] += event.deltaY;
@@ -217,11 +242,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
+
     private clampScroll() {
         const prop = this._scrollProp;
         this[prop] = Phaser.Math.Clamp(this[prop], this.start, this.end);
         this._end = this[prop];
     }
+
 
 
     update(time, delta) {
@@ -247,13 +274,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             let sign = Math.sign(d);
 
             // Newton's law of universal gravitation with some changes to avoid NaN
-            this._speed += -sign * 5 * (1 / ((d * d) + 1)) - sign * 8;
+            this._speed += -sign * 16 * (1 / ((d * d) + 1)) - sign * 8;
 
             if ((prevSpeed > 0 && this._speed < 0) || (prevSpeed < 0 && this._speed > 0)) {
                 this._snapBounces++;
             }
 
-            if (this._snapBounces > 5) {
+            if (this._snapBounces > 3) {
                 this.makeSnap(nearest);
             }
 
@@ -261,6 +288,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         this.clampScroll();
     } // End update()
+
+
 
     private pointerIsOver() {
         let isOver = true;
@@ -272,6 +301,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         }
         return isOver;
     }
+
+
 
     private checkBounds() {
         const prop = this._scrollProp;
@@ -285,6 +316,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         }
     }
 
+
+
     private makeSnap(nearest: number) {
         const prop = this._scrollProp;
         this[prop] = nearest;
@@ -296,6 +329,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
+
     private getSnapIndex(scrollPos: number, snapTop: number, gap: number) {
         let snapIndex = Math.round((scrollPos - snapTop) / gap);
         return snapIndex;
@@ -304,6 +338,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private getNearest(currentPos: number, start: number, padding: number): number {
         return start + Math.round((currentPos - start) / padding) * padding;
     }
+
+
 
     /**
      * Used to print debug info on screen
@@ -316,6 +352,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         })
         this.txtDebug.setText(str);
     }
+
 
 
     destroy() {
@@ -367,6 +404,15 @@ interface ScrollConfig {
      * The height of this camera
      */
     height?: number,
+    /**
+     * Bounds of the camera content {x,y,width,height}
+     */
+    contentBounds?: {
+        x: number,
+        y: number,
+        width?: number,
+        height?: number
+    },
     /**
      * Start bound of the scroll (top for vertical orientation, left for horizontal orientation)
      */
