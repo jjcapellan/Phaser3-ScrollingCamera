@@ -91,7 +91,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             wheel = false,
             drag = 0.95,
             minSpeed = 4,
-            snap = {enable: false},
+            snap = { enable: false },
             horizontal = false
         }: ScrollConfig
     ) {
@@ -112,7 +112,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.horizontal = horizontal;
 
         this.snap.padding = snap.padding || 20;
-        this.snap.deadZone = (snap.deadZone === undefined) ? 0.4 : snap.deadZone;
 
         this.init();
     } // End constructor
@@ -228,19 +227,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         if (Math.abs(this._speed) < this.minSpeed && !this.isOnSnap) {
             this._speed = 0;
-            if (this.snap.enable&& !this.scene.input.activePointer.isDown) {
-                const start = this.start;
-                const snapPosition = this[prop] - start;
-                const gap = this.snap.padding;
-                const gapRatio = snapPosition / gap;
-                const gapRatioRemain = gapRatio % 1;
-                //// Snap
-                if (Math.abs(0.5 - gapRatioRemain) >= this.snap.deadZone / 2) {
-                    this[prop] = this.getNearest(this[prop], this.start, this.snap.padding);
-                    this.snapIndex = this.getSnapIndex(this[prop], this.start, this.snap.padding);
-                    this.isOnSnap = true;
-                    this.emit('snap', this.snapIndex);
-                }
+            if (this.snap.enable && !this.scene.input.activePointer.isDown) {
+                this[prop] = this.getNearest(this[prop], this.start, this.snap.padding);
+                this.snapIndex = this.getSnapIndex(this[prop], this.start, this.snap.padding);
+                this.isOnSnap = true;
+                this.emit('snap', this.snapIndex);
             }
         }
         this.clampScroll();
@@ -264,8 +255,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         return snapIdx;
     }
 
-    private getNearest(currentPos: number, start: number, padding: number): number{
-        return start + Math.round((currentPos - start)/padding) * padding;
+    private getNearest(currentPos: number, start: number, padding: number): number {
+        return start + Math.round((currentPos - start) / padding) * padding;
     }
 
 
@@ -296,11 +287,7 @@ interface SnapConfig {
     /**
      * Vertical distance in pixels between snap points.
      */
-    padding?: number,
-    /**
-     * % of space between two snap points not influenced by snap effect.\n
-     */
-    deadZone?: number
+    padding?: number
 }
 
 
