@@ -133,15 +133,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         //// Sets events
         this.setEvents();
 
-        this.scene.time.addEvent({ delay: 500, callback: this.resetMoving, callbackScope: this, loop: true });
-
         this.scene.cameras.addExisting(this);
     } // End init()
-
-
-    private resetMoving() {
-        this.moving = false;
-    }
 
 
     /**
@@ -196,6 +189,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._endTime = performance.now();
         this.isOnSnap = false;
         if (this.moving) {
+            this.moving = false; 
             this.setSpeed();
         }
     }
@@ -222,6 +216,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         if (!this.isOnSnap) {
             this.checkBounds();
+        }
+
+        if(Math.abs(this._speed) < 1){
+            this._speed = 0;
+            this.moving = false;
         }
 
 
