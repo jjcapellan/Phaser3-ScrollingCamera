@@ -146,7 +146,7 @@ class Test extends Phaser.Scene {
       height: 45,
       start: 540,
       end: 540 + 800,
-      snapConfig: {
+      snap: {
         enable: true,
         padding: 40
       },
