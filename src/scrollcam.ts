@@ -22,7 +22,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     right: number;
     wheel: boolean;
     drag: number;
-    minSpeed: number;
     snap: SnapConfig;
     horizontal: boolean;
 
@@ -99,7 +98,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             end = 5000,
             wheel = false,
             drag = 0.95,
-            minSpeed = 4,
             snap = { enable: false },
             horizontal = false
         }: ScrollConfig
@@ -116,7 +114,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.end = end - (horizontal ? this.width : this.height);
         this.wheel = wheel;
         this.drag = drag;
-        this.minSpeed = minSpeed;
         this.snap = snap;
         this.horizontal = horizontal;
 
@@ -388,10 +385,6 @@ interface ScrollConfig {
      * Example: 0.5 reduces 50% scroll speed per game step.
      */
     drag?: number,
-    /**
-     * Bellow this speed value (pixels/second), the scroll is stopped
-     */
-    minSpeed?: number,
     /**
      * Contains snap parameters.
      */
