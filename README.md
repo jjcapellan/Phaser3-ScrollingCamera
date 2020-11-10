@@ -1,8 +1,8 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/jjcapellan/Phaser3-ScrollingCamera.svg)
 ![GitHub license](https://img.shields.io/github/license/jjcapellan/Phaser3-ScrollingCamera.svg)
 # PHASER3 - SCROLLING CAMERA CLASS
-**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of Phaser 3 framework, adding the capacity of vertical scrolling by dragging or using the mouse wheel.  
-The scroll is customizable.  
+**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of Phaser 3 framework, adding the capacity of vertical and horizontal scrolling by dragging or using the mouse wheel.  
+The scroll is customizable.
 Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/  
 ## Installation
 There are two alternatives:

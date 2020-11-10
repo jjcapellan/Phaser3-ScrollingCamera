@@ -138,7 +138,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.init();
     } // End constructor
 
-    
+
 
     private init() {
         this.moving = false;
@@ -161,7 +161,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             this.txtDebug = this.scene.add.text(this.x, this.y, 'debug');
         }
 
-        //// Sets events
         this.setEvents();
 
         this.scene.cameras.addExisting(this);
@@ -251,7 +250,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
 
-    update(time, delta) {
+    update(_time, delta) {
         const prop = this._scrollProp;
         this[prop] += this._speed * (delta / 1000);
         this._speed *= this.drag;
@@ -269,7 +268,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         else if (!this.isOnSnap && (!this.scene.input.activePointer.isDown || !this.pointerIsOver())) {
 
             let prevSpeed = this._speed;
-            let nearest = this.getNearest(this[prop], this.start, this.snap.padding);
+            let nearest = this.getNearest(this[prop]);
             let d = this[prop] - nearest;
             let sign = Math.sign(d);
 
@@ -309,10 +308,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         if (this[prop] <= this.start) {
             this[prop] = this.start;
-            this.makeSnap(this.getNearest(this[prop], this.start, this.snap.padding));
+            this.makeSnap(this.getNearest(this[prop]));
         } else if (this[prop] >= this.end) {
             this[prop] = this.end;
-            this.makeSnap(this.getNearest(this[prop], this.start, this.snap.padding));
+            this.makeSnap(this.getNearest(this[prop]));
         }
     }
 
@@ -335,8 +334,12 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         return snapIndex;
     }
 
-    private getNearest(currentPos: number, start: number, padding: number): number {
-        return start + Math.round((currentPos - start) / padding) * padding;
+    
+
+    private getNearest(currentPos: number): number {
+        const start = this.start;
+        const padding = this.snap.padding;
+        return start + Math.round((currentPos - this.start) / padding) * padding;
     }
 
 
