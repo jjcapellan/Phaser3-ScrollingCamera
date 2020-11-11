@@ -18,7 +18,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     y: number;
     width: number;
     height: number;
-    cBounds:{
+    cBounds: {
         x: number,
         y: number,
         width?: number,
@@ -40,7 +40,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private moving: boolean;
     /**
      * Receives input. Allows this camera be interactive even behind the main camera
-     */    
+     */
     private _zone: Phaser.GameObjects.Zone;
     /** 
      * Scroll speed in pixels per second
@@ -114,9 +114,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.y = y;
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
-        
-        let cBounds = contentBounds || { x: this.x, y: this.y};
-        if(horizontal){
+
+        let cBounds = contentBounds || { x: this.x, y: this.y };
+        if (horizontal) {
             cBounds.height = this.height;
             cBounds.width = cBounds.width || 5000;
             this.start = cBounds.x;
@@ -153,7 +153,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
         this.isOnSnap = true;
         this.snapIndex = 0;
-        this._debug = false;
+        this._debug = true;
         this._snapBounces = 0;
 
         // Debug
@@ -255,6 +255,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this[prop] += this._speed * (delta / 1000);
         this._speed *= this.drag;
 
+        this.debug([this.snap.enable ? 1 : 0]);
+
         if (!this.isOnSnap) {
             this.checkBounds();
         }
@@ -265,7 +267,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             this.moving = false;
 
         }
-        else if (!this.isOnSnap && (!this.scene.input.activePointer.isDown || !this.pointerIsOver())) {
+        else if (this.snap.enable && !this.isOnSnap && (!this.scene.input.activePointer.isDown || !this.pointerIsOver())) {
 
             let prevSpeed = this._speed;
             let nearest = this.getNearest(this[prop]);
@@ -324,7 +326,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._snapBounces = 0;
         this.isOnSnap = true;
         this._speed = 0;
-        this.emit('snap', this.snapIndex);
+        if (this.snap.enable) {
+            this.emit('snap', this.snapIndex);
+        }
     }
 
 
@@ -334,7 +338,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         return snapIndex;
     }
 
-    
+
 
     private getNearest(currentPos: number): number {
         const start = this.start;
