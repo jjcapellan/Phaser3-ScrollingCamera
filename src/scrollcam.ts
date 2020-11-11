@@ -69,7 +69,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * Snap state
      */
-    isOnSnap: boolean;
+    private isOnSnap: boolean;
     /**
      * Stores the snap index (0 ,1 , 2, ...)
      */
