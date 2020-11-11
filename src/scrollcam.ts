@@ -103,7 +103,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             contentBounds,
             wheel = false,
             drag = 0.95,
-            snap = { enable: false },
+            snap = { enable: false},
             horizontal = false
         }: ScrollConfig
     ) {
@@ -130,10 +130,14 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         this.wheel = wheel;
         this.drag = drag;
+        
         this.snap = snap;
+        this.snap.bounces = snap.bounces || 3;
+        this.snap.padding = snap.padding || 20;
+
         this.horizontal = horizontal;
 
-        this.snap.padding = snap.padding || 20;
+        
 
         this.init();
     } // End constructor
@@ -281,7 +285,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
                 this._snapBounces++;
             }
 
-            if (this._snapBounces > 3) {
+            if (this._snapBounces > this.snap.bounces) {
                 this.makeSnap(nearest);
             }
 
@@ -389,7 +393,11 @@ interface SnapConfig {
     /**
      * Vertical distance in pixels between snap points.
      */
-    padding?: number
+    padding?: number,
+    /**
+     * Number of bounces before snapping
+     */
+    bounces?: number
 }
 
 
