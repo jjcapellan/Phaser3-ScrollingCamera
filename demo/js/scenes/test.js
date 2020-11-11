@@ -8,27 +8,27 @@ class Test extends Phaser.Scene {
     //// Images
 
     const contentCamera1 = this.add.image(60,100,'atlas','content').setOrigin(0);
-    const shade1 = this.add.image(60 - 20 ,100 - 20, 'atlas','horizontal-shade').setOrigin(0,1).setAngle(90);
+    const shade1 = this.add.image(40 ,80, 'atlas','horizontal-shade').setOrigin(0,1).setAngle(90);
 
-    const contentCamera2 = this.add.image(300 ,600-60,'atlas','content').setOrigin(0).setAngle(-90);
-    const shade2 = this.add.image(300 - 20,600-60, 'atlas','horizontal-shade').setOrigin(0,1);
+    const contentCamera2 = this.add.image(300 ,540,'atlas','content').setOrigin(0).setAngle(-90);
+    const shade2 = this.add.image(280,540, 'atlas','horizontal-shade').setOrigin(0,1);
 
     const contentCamera3 = this.add.image(540, 140, 'atlas', 'drag').setOrigin(0);
-    const shade3 = this.add.image(540 - 20, 140 - 20, 'atlas', 'param-shade').setOrigin(0);
+    const shade3 = this.add.image(520, 120, 'atlas', 'param-shade').setOrigin(0);
 
     const contentCamera4 = this.add.image(540, 220, 'atlas', 'minspeed').setOrigin(0);
-    const shade4 = this.add.image(540 - 20, 220 -20, 'atlas', 'param-shade').setOrigin(0);
+    const shade4 = this.add.image(520, 200, 'atlas', 'param-shade').setOrigin(0);
     
 
-    this.add.image(200, 600 - 60 - 40, 'atlas', 'value-background').setOrigin(0,1);
-    this.txtValue = this.add.text(200 + 40, 600 - 60 - 40 -45 + 23, '--', {color: '#000000'}).setOrigin(0.5,0.5);
-    this.add.image(200 - 20, 600 - 60 - 40, 'atlas', 'value-shade').setOrigin(0,1);
+    this.add.image(200, 500, 'atlas', 'value-background').setOrigin(0,1);
+    this.txtValue = this.add.text(240, 500 -45 + 23, '--', {color: '#000000'}).setOrigin(0.5,0.5);
+    this.add.image(180, 500, 'atlas', 'value-shade').setOrigin(0,1);
     
     const body = this.add.image(0,0,'atlas','body').setOrigin(0);
 
     // Button
 
-    this.button = new Button(this, 475, 350, 'atlas', 'bt-snap-off', 'bt-snap-on', true);
+    this.button = new Button(this, 475, 350, 'atlas', 'bt-snap-off', 'bt-snap-on', false);
     this.setButton();
     
 
@@ -59,8 +59,10 @@ class Test extends Phaser.Scene {
     this.button.on('pointerdown', () => {
       this.button.switchState();
       if(this.button.pressed){
-        this.camera2.snap.enable = true;
+        this.camera1.snap.enable = true;
+        this.camera2.snap.enable = true;        
       } else {
+        this.camera1.snap.enable = false;
         this.camera2.snap.enable = false;
         this.txtValue.setText('--');
       }
@@ -71,15 +73,20 @@ class Test extends Phaser.Scene {
     function getValue(snapIndex, initialValue, increment){
       return snapIndex * increment + initialValue;
     }
+    // Snap event of "drag" camera
     this.camera3.on('snap', (snapIndex) => {
       const drag = getValue(snapIndex, 0.95, -0.05);
       this.camera1.drag = drag;
       this.camera2.drag = drag;
     });
+
+    // Snap event of "bounces" camera
     this.camera4.on('snap', (snapIndex) => {
-      const minSpeed = getValue(snapIndex, 3, 1);
-      this.camera2.minSpeed = minSpeed;
+      const bounces = getValue(snapIndex, 3, 1);
+      this.camera2.snap.bounces = bounces;
     });
+
+    // Snap event of big horizontal camera
     this.camera2.on('snap', (snapIndex) => {
       this.txtValue.text = getValue(snapIndex, 830, 60);
     });
@@ -95,6 +102,10 @@ class Test extends Phaser.Scene {
         x: 60,
         y: 100,
         height: 1120
+      },
+      snap:{
+        enable: false,
+        padding: 60
       }
     }
 
@@ -105,17 +116,17 @@ class Test extends Phaser.Scene {
   setCamera2(){
     const config = {
       x: 300,
-      y: 600 - 60 - 120,
+      y: 420,
       width: 450,
       height: 120,
       contentBounds: {
         x: 300,
-        y: 600 - 60 - 120,
+        y: 420,
         width: 1120
       },
       wheel: true,
       snap: {
-        enable: true,
+        enable: false,
         padding: 60
       },
       horizontal: true
