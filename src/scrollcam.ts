@@ -18,7 +18,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     y: number;
     width: number;
     height: number;
-    cBounds: {
+    contentBounds: {
         x: number,
         y: number,
         width?: number,
@@ -30,6 +30,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     drag: number;
     snap: SnapConfig;
     horizontal: boolean;
+    /**
+     * Stores the snap index (0 ,1 , 2, ...)
+     */
+    snapIndex: number;
 
 
 
@@ -69,11 +73,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * Snap state
      */
-    private isOnSnap: boolean;
-    /**
-     * Stores the snap index (0 ,1 , 2, ...)
-     */
-    snapIndex: number;
+    private isOnSnap: boolean;    
     /**
      * Used for debug tasks
      */
@@ -115,17 +115,17 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
 
-        let cBounds = contentBounds || { x: this.x, y: this.y };
+        this.contentBounds = contentBounds || { x: this.x, y: this.y };
         if (horizontal) {
-            cBounds.height = this.height;
-            cBounds.width = cBounds.width || 5000;
-            this.start = cBounds.x;
-            this.end = cBounds.x + cBounds.width - this.width;
+            this.contentBounds.height = this.height;
+            this.contentBounds.width = this.contentBounds.width || 5000;
+            this.start = this.contentBounds.x;
+            this.end = this.contentBounds.x + this.contentBounds.width - this.width;
         } else {
-            cBounds.height = cBounds.height || 5000;
-            cBounds.width = this.width;
-            this.start = cBounds.y;
-            this.end = cBounds.y + cBounds.height - this.height;
+            this.contentBounds.height = this.contentBounds.height || 5000;
+            this.contentBounds.width = this.width;
+            this.start = this.contentBounds.y;
+            this.end = this.contentBounds.y + this.contentBounds.height - this.height;
         }
 
         this.wheel = wheel;
