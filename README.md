@@ -1,7 +1,7 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/jjcapellan/Phaser3-ScrollingCamera.svg)
 ![GitHub license](https://img.shields.io/github/license/jjcapellan/Phaser3-ScrollingCamera.svg)
 # PHASER3 - SCROLLING CAMERA CLASS
-**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of Phaser 3 framework, adding the capacity of vertical and horizontal scrolling by dragging or using the mouse wheel.  
+**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of [Phaser 3](https://phaser.io/) framework, adding the capacity of vertical and horizontal scrolling by dragging or using the mouse wheel.  
 The scroll is customizable.
 Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/  
 
@@ -13,9 +13,13 @@ Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/
 * Accepts dragging and mouse wheel as input (keyboard supported via setSpeed()).
 
 ## Table of contents
-* [Installation](#Installation)
-  * [Browser](#Browser)
-  * [From NPM](#From-NPM)
+* [Installation](#installation)
+  * [Browser](#browser)
+  * [From NPM](#from-npm)
+* [How to use](#how-to-use)
+* [Snap event](#snap-event)
+* [License](#license)
+---
 
 ## Installation
 ### Browser
@@ -50,6 +54,7 @@ import ScrollingCamera from 'phaser-scrolling-camera';
 const config = { ... }
 const myScrollCam = new ScrollingCamera(this, config);
 ```
+---
 ## How to use
 This is the simplest case (uses the default parameters):
 ```javascript
@@ -89,8 +94,15 @@ let cursors = this.input.keyboard.createCursorKeys();
 cursors.down.on('down', () => myCamera.setSpeed(50));
 cursors.up.on('down', () => myCamera.setSpeed(-50));
 ```
-## Dependencies
-Phaser 3: https://phaser.io/
+---
+## Snap event
+```javascript
+const myCamera = new ScrollingCamera(this, configObject)
+
+myCamera.on('snap', (snapIndex) => {
+  console.log(snapIndex);
+})
+```
 ## License
 **ScrollingCamera** is licensed under the terms of the MIT open source license.
 
