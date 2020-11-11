@@ -7,30 +7,30 @@ class Test extends Phaser.Scene {
 
     //// Images
 
-    const contentCamera1 = this.add.image(60,100,'atlas','content').setOrigin(0);
-    const shade1 = this.add.image(40 ,80, 'atlas','horizontal-shade').setOrigin(0,1).setAngle(90);
+    const contentCamera1 = this.add.image(60, 100, 'atlas', 'content').setOrigin(0);
+    const shade1 = this.add.image(40, 80, 'atlas', 'horizontal-shade').setOrigin(0, 1).setAngle(90);
 
-    const contentCamera2 = this.add.image(300 ,540,'atlas','content').setOrigin(0).setAngle(-90);
-    const shade2 = this.add.image(280,540, 'atlas','horizontal-shade').setOrigin(0,1);
+    const contentCamera2 = this.add.image(300, 540, 'atlas', 'content').setOrigin(0).setAngle(-90);
+    const shade2 = this.add.image(280, 540, 'atlas', 'horizontal-shade').setOrigin(0, 1);
 
     const contentCamera3 = this.add.image(540, 140, 'atlas', 'drag').setOrigin(0);
     const shade3 = this.add.image(520, 120, 'atlas', 'param-shade').setOrigin(0);
 
     const contentCamera4 = this.add.image(540, 220, 'atlas', 'minspeed').setOrigin(0);
     const shade4 = this.add.image(520, 200, 'atlas', 'param-shade').setOrigin(0);
-    
 
-    this.add.image(200, 500, 'atlas', 'value-background').setOrigin(0,1);
-    this.txtValue = this.add.text(240, 500 -45 + 23, '--', {color: '#000000'}).setOrigin(0.5,0.5);
-    this.add.image(180, 500, 'atlas', 'value-shade').setOrigin(0,1);
-    
-    const body = this.add.image(0,0,'atlas','body').setOrigin(0);
+
+    this.add.image(200, 500, 'atlas', 'value-background').setOrigin(0, 1);
+    this.txtValue = this.add.text(240, 500 - 45 + 23, '--', { color: '#000000' }).setOrigin(0.5, 0.5);
+    this.add.image(180, 500, 'atlas', 'value-shade').setOrigin(0, 1);
+
+    const body = this.add.image(0, 0, 'atlas', 'body').setOrigin(0);
 
     // Button
 
     this.button = new Button(this, 475, 350, 'atlas', 'bt-snap-off', 'bt-snap-on', false);
     this.setButton();
-    
+
 
     //// Scrolling cameras
 
@@ -52,15 +52,15 @@ class Test extends Phaser.Scene {
 
     // Not necesary if the camera contents is out of screen
     this.cameras.main.ignore([contentCamera1, contentCamera2, contentCamera3, contentCamera4]);
-    
+
   }
 
-  setButton(){
+  setButton() {
     this.button.on('pointerdown', () => {
       this.button.switchState();
-      if(this.button.pressed){
+      if (this.button.pressed) {
         this.camera1.snap.enable = true;
-        this.camera2.snap.enable = true;        
+        this.camera2.snap.enable = true;
       } else {
         this.camera1.snap.enable = false;
         this.camera2.snap.enable = false;
@@ -69,8 +69,8 @@ class Test extends Phaser.Scene {
     });
   }
 
-  setCamerasEvents(){
-    function getValue(snapIndex, initialValue, increment){
+  setCamerasEvents() {
+    function getValue(snapIndex, initialValue, increment) {
       return snapIndex * increment + initialValue;
     }
     // Snap event of "drag" camera
@@ -92,7 +92,7 @@ class Test extends Phaser.Scene {
     });
   }
 
-  setCamera1(){
+  setCamera1() {
     const config = {
       x: 60,
       y: 100,
@@ -103,7 +103,7 @@ class Test extends Phaser.Scene {
         y: 100,
         height: 1120
       },
-      snap:{
+      snap: {
         enable: false,
         padding: 60
       }
@@ -113,7 +113,7 @@ class Test extends Phaser.Scene {
 
   }
 
-  setCamera2(){
+  setCamera2() {
     const config = {
       x: 300,
       y: 420,
@@ -136,7 +136,7 @@ class Test extends Phaser.Scene {
   }
 
   // drag values
-  setCamera3(){
+  setCamera3() {
     const config = {
       x: 540,
       y: 140,
@@ -158,7 +158,7 @@ class Test extends Phaser.Scene {
   }
 
   // minSpeed values
-  setCamera4(){
+  setCamera4() {
     const config = {
       x: 540,
       y: 220,
@@ -179,7 +179,7 @@ class Test extends Phaser.Scene {
     this.camera4 = new ScrollingCamera(this, config);
   }
 
-  
+
 
 
 }
