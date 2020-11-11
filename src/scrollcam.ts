@@ -26,7 +26,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
     start: number;
     end: number;
-    wheel: boolean;
+    wheel: {
+        enable: boolean,
+        delta?: number
+    };
     drag: number;
     snap: SnapConfig;
     horizontal: boolean;
@@ -73,7 +76,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * Snap state
      */
-    private isOnSnap: boolean;    
+    private isOnSnap: boolean;
     /**
      * Used for debug tasks
      */
@@ -101,9 +104,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             width,
             height,
             contentBounds,
-            wheel = false,
+            wheel = {enable:false},
             drag = 0.95,
-            snap = { enable: false},
+            snap = { enable: false },
             horizontal = false
         }: ScrollConfig
     ) {
@@ -128,16 +131,16 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             this.end = this.contentBounds.y + this.contentBounds.height - this.height;
         }
 
-        this.wheel = wheel;
+        this.wheel = wheel || {enable: false, delta: 55};
         this.drag = drag;
-        
+
         this.snap = snap;
         this.snap.bounces = snap.bounces || 3;
         this.snap.padding = snap.padding || 20;
 
         this.horizontal = horizontal;
 
-        
+
 
         this.init();
     } // End constructor
@@ -239,7 +242,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private wheelHandler(event) {
         const prop = this._scrollProp;
-        this[prop] += event.deltaY;
+        let sign = Math.sign(event.deltaY)
+        this[prop] += sign * this.wheel.delta;//event.deltaY;
         this._snapBounces = 0;
         this.isOnSnap = false;
     }
@@ -436,10 +440,17 @@ interface ScrollConfig {
      * End bound of the scroll (bottom for vertical orientation, right for horizontal orientation)
      */
     end?: number,
-    /*
-     * Does this camera use the mouse wheel?
-     */
-    wheel?: boolean,
+
+    wheel?: {
+        /*
+        * Does this camera use the mouse wheel?
+        */
+        enable: boolean,
+        /**
+         * Variation of scroll with each wheel change
+         */
+        delta?: number
+    },
     /**
      * Number between 0 and 1.
      * Reduces the scroll speed per game step.

@@ -103,6 +103,10 @@ class Test extends Phaser.Scene {
         y: 100,
         height: 1120
       },
+      wheel:{
+        enable: true,
+        delta: 60
+      },
       snap: {
         enable: false,
         padding: 60
@@ -124,7 +128,10 @@ class Test extends Phaser.Scene {
         y: 420,
         width: 1120
       },
-      wheel: true,
+      wheel: {
+        enable: true,
+        delta: 60
+      },
       snap: {
         enable: false,
         padding: 60
