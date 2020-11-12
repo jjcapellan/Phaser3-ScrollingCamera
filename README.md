@@ -70,14 +70,14 @@ And this is the opposite case with all possible customizations:
 let cameraOptions = {
       x: 50,             // x position of the camera (default = 0)
       y: 50,             // y position of the camera (default = 0)
-      width: 300,        // width of the camera (default = game.config.width)
-      height: 500,       // height of the camera (default = game.config.height)
-      contentBounds: {   // rectangle which determines the limits of the area where the camera is looking
-        x: 50,           // x position of contents (default = cameraOptions.x)
-        y: 50,           // y position of contents (default = cameraOptions.y)
-        width: 1200      // width of the contents (default = 5000). Vertical camera uses "height" instead "width".
+      width: 300,        // Width of the camera (default = game.config.width)
+      height: 500,       // Height of the camera (default = game.config.height)
+      contentBounds: {   // Determines the limits of the area where the camera is looking. (optional)
+        x: 400,          // x position of contents from top-left origin (default = cameraOptions.x)
+        y: 10,           // y position of contents from top-left origin (default = cameraOptions.y)
+        length: 1200     // Distance measured in pixels along the camera main axis
       }
-      wheel: {
+      wheel: {           // Mouse wheel params (optional)
         enable: true,    // Does this camera use the mouse wheel? (default = false)
         delta: 60        // Variation of scroll in pixels with each wheel change (default = 55)
       }
