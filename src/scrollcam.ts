@@ -29,13 +29,21 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     height: number;
     /**
-     * Rectangle which determines the limits of the area where the camera is looking
+     * Determines the limits of the area where the camera is looking. 
      */
     contentBounds: {
+        /**
+         * x position of the top left origin
+         */
         x: number,
+        /**
+         * y position of the top left origin
+         */
         y: number,
-        width?: number,
-        height?: number
+        /**
+         * Distance measured in pixels along the camera main axis
+         */
+        length?: number
     }
     /**
      * wheel config
@@ -274,16 +282,16 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private initContentBounds(contentBounds?: Cbounds) {
 
         let cb = contentBounds || { x: this.x, y: this.y };
+        cb.x = cb.x || this.x;
+        cb.y = cb.y || this.y;
+        cb.length = cb.length || 5000;
+
         if (this.horizontal) {
-            cb.height = this.height;
-            cb.width = cb.width || 5000;
             this.start = cb.x;
-            this.end = cb.x + cb.width - this.width;
+            this.end = cb.x + cb.length - this.width;
         } else {
-            cb.height = cb.height || 5000;
-            cb.width = this.width;
             this.start = cb.y;
-            this.end = cb.y + cb.height - this.height;
+            this.end = cb.y + cb.length - this.height;
         }
 
         this.contentBounds = cb;
@@ -401,7 +409,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     }
 
 
-    
+
     private debug(variables: number[]) {
         let str: string = "";
         variables.forEach((v) => {
@@ -460,7 +468,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             this.emit('snap', this.snapIndex);
         }
     }
-    
+
 
 } // End class
 
@@ -496,11 +504,22 @@ interface WheelConfig {
 
 
 
+/**
+     * Determines the limits of the area where the camera is looking. 
+     */
 interface Cbounds {
+    /**
+     * x position of the top left origin
+     */
     x: number,
+    /**
+     * y position of the top left origin
+     */
     y: number,
-    width?: number,
-    height?: number
+    /**
+     * Distance measured in pixels along the camera main axis
+     */
+    length?: number
 }
 
 
@@ -528,8 +547,7 @@ interface ScrollConfig {
     contentBounds?: {
         x: number,
         y: number,
-        width?: number,
-        height?: number
+        length?: number
     },
     /**
      * Start bound of the scroll (top for vertical orientation, left for horizontal orientation)

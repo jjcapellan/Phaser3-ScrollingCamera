@@ -99,9 +99,9 @@ class Test extends Phaser.Scene {
       width: 120,
       height: 450,
       contentBounds: {
-        x: 60,
-        y: 100,
-        height: 1120
+        // x: 60,  <--- By default contentBounds uses the camera position, so in this case is not necessary declare this property
+        // y: 100,
+        length: 1120
       },
       wheel:{
         enable: true,
@@ -124,9 +124,9 @@ class Test extends Phaser.Scene {
       width: 450,
       height: 120,
       contentBounds: {
-        x: 300,
-        y: 420,
-        width: 1120
+        // x: 300,  <--- By default contentBounds uses the camera position, so in this case is not necessary declare this property
+        // y: 420,
+        length: 1120
       },
       wheel: {
         enable: true,
@@ -150,9 +150,9 @@ class Test extends Phaser.Scene {
       width: 200,
       height: 45,
       contentBounds: {
-        x: 540,
-        y: 140,
-        width: 800
+        //x: 540, <--- By default contentBounds uses the camera position, so in this case is not necessary declare this property
+        //y: 140,
+        length: 800
       },
       snap: {
         enable: true,
@@ -172,8 +172,8 @@ class Test extends Phaser.Scene {
       width: 200,
       height: 45,
       contentBounds: {
-        x: 540,
-        y: 220,
+        // x: 540,  <--- By default contentBounds uses the camera position, so in this case is not necessary declare this property
+        // y: 220,
         width: 800
       },
       snap: {
