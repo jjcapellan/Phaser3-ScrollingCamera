@@ -308,8 +308,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private initScroll() {
-        this.scrollX = this.horizontal ? (this.start || this.x) : this.x;
-        this.scrollY = this.horizontal ? this.y : (this.start || this.y);
+        this.scrollX = this.horizontal ? this.start : this.x;
+        this.scrollY = this.horizontal ? this.y : this.start;
         this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
     }
 
