@@ -170,11 +170,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         const { x, y, width, height, contentBounds, wheel, drag, snap, horizontal }: ScrollConfig = config;
 
         this.scene = scene;
-        this.x = x || this.x;
-        this.y = y || this.y;
+        this.x = x !== undefined ? x : this.x;
+        this.y = y !== undefined ? y : this.y;
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
-        this.drag = drag || this.drag;
+        this.drag = drag !== undefined ? drag : this.drag;
         this.horizontal = horizontal;
 
         this.initContentBounds(contentBounds);
@@ -282,9 +282,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private initContentBounds(contentBounds?: Cbounds) {
 
         let cb = contentBounds || { x: this.x, y: this.y };
-        cb.x = cb.x || this.x;
-        cb.y = cb.y || this.y;
-        cb.length = cb.length || 5000;
+        cb.x = 'x' in cb ? cb.x : this.x;
+        cb.y = 'y' in cb ? cb.y : this.y;
+        cb.length = 'length' in cb ? cb.length : 5000;
 
         if (this.horizontal) {
             this.start = cb.x;
@@ -317,7 +317,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private initWheel(wheel?: WheelConfig) {
         let w = wheel || { enable: false };
-        w.delta = w.delta || 55;
+        w.delta = 'delta' in w ? w.delta : 55;
 
         this.wheel = w;
     }
