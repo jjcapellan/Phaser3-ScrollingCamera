@@ -18,6 +18,8 @@ Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/
   * [From NPM](#from-npm)
 * [How to use](#how-to-use)
 * [Snap event](#snap-event)
+* [Public methods](#public-methods)
+  * [setSpeed](#setspeed)
 * [License](#license)
 ---
 
@@ -75,7 +77,10 @@ let cameraOptions = {
         y: 50,           // y position of contents (default = cameraOptions.y)
         width: 1200      // width of the contents (default = 5000). Vertical camera uses "height" instead "width".
       }
-      wheel: true,       // Does this camera use mouse wheel? (default = false)
+      wheel: {
+        enable: true,    // Does this camera use the mouse wheel? (default = false)
+        delta: 60        // Variation of scroll in pixels with each wheel change (default = 55)
+      }
       drag: 0.90,        // Reduces the scroll speed per game step in 10%. (default = 0.95)      
       snap: {
         enable: false,   // Does this camera use snap effect? (default = false)
@@ -86,7 +91,27 @@ let cameraOptions = {
     };
 const myCamera = new ScrollingCamera(this, cameraOptions);
 ```
-You can control scroll binding any button or key:
+
+---
+## Snap event
+In the code bellow, the event snap returns the last snap position (snapIndex) where the camera was stopped.  
+This position is **not in pixels**, is an index representing the first snap, the second snap, ... (0, 1, ...).  
+This is usefull to extract a numeric value like in the demo.
+```javascript
+const myCamera = new ScrollingCamera(this, configObject)
+
+myCamera.on('snap', (snapIndex) => {
+  console.log(snapIndex);
+});
+```
+---
+## Public methods
+Besides the functions inherited from the parent class, ScrollingCamera only have one public method:
+### <a id="setspeed"></a>setSpeed(speed: number)
+Params:
+* **speed** : scroll speed in pixels/second   
+
+This method can be usefull, for example, to implement keyboard control:
 ```javascript
 // In create function ...
 let myCamera = new ScrollingCamera(this);
@@ -95,14 +120,6 @@ cursors.down.on('down', () => myCamera.setSpeed(50));
 cursors.up.on('down', () => myCamera.setSpeed(-50));
 ```
 ---
-## Snap event
-```javascript
-const myCamera = new ScrollingCamera(this, configObject)
-
-myCamera.on('snap', (snapIndex) => {
-  console.log(snapIndex);
-})
-```
 ## License
 **ScrollingCamera** is licensed under the terms of the MIT open source license.
 
