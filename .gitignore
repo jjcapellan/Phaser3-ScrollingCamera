@@ -16,7 +16,7 @@ package-lock.json
 *.tgz
 
 # dist folder
-dist/
+#dist/
 
 # Microbundle cache
 .rpt2_cache/

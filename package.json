@@ -2,14 +2,16 @@
   "name": "phaser3-scrolling-camera",
   "version": "2.0.0",
   "description": "Class for Phaser 3 framework, adding the capacity of vertical scrolling by dragging or using the mouse wheel.",
-  "source": "src/scrollcam.ts",
-  "main": "dist/scrollcam.cjs.js",
+  
+  "main": "dist/scrollcam.js",
+  "umd:main": "dist/scrollcam.umd.js",
   "module": "dist/scrollcam.esm.js",
-  "umd:main": "dist/scrollcam.min.js",
+  "source": "src/scrollcam.ts",  
   "types": "dist/scrollcam.d.ts",
+
   "scripts": {
     "build:dev": "microbundle -f umd --name ScrollingCamera",
-    "build:dist": "microbundle -f es,cjs,umd --name ScrollingCamera --sourcemap false",
+    "build:dist": "microbundle -f cjs,umd,es --name ScrollingCamera --sourcemap false",
     "dev": "microbundle watch -f umd --name ScrollingCamera"
   },
   "repository": {
