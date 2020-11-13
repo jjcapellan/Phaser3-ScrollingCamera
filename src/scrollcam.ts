@@ -13,22 +13,6 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     //// Public properties
 
     /**
-     * The x position of this camera (default = 0)
-     */
-    x: number = 0;
-    /**
-     * The y position of this camera (default = 0)
-     */
-    y: number = 0;
-    /**
-     * The width of this camera (default = game.width)
-     */
-    width: number;
-    /**
-     * The height of this camera (default = game.height)
-     */
-    height: number;
-    /**
      * Determines the limits of the area where the camera is looking. 
      */
     contentBounds: {
@@ -46,24 +30,19 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         length?: number
     }
     /**
-     * wheel config
-     */
-    wheel: {
-        /*
-        * Does this camera use the mouse wheel? (default = 0)
-        */
-        enable: boolean,
-        /**
-         * Variation of scroll in pixels with each wheel change (default = 55)
-         */
-        delta?: number
-    };
-    /**
      * Number between 0 and 1. (default = 0.95)
      * Reduces the scroll speed per game step.
      * Example: 0.5 reduces 50% scroll speed per game step.
      */
     drag: number = 0.95;
+    /**
+     * The height of this camera (default = game.height)
+     */
+    height: number;
+    /**
+     * Should this camera use horizontal orientation?
+     */
+    horizontal: boolean;
     /**
      * snap config
      */
@@ -82,34 +61,79 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         bounces?: number
     };
     /**
-     * Should this camera use horizontal orientation?
-     */
-    horizontal: boolean;
-    /**
-     * Start bound of the scroll (top for vertical orientation, left for horizontal orientation)
-     */
-    start: number;
-    /**
-     * End bound of the scroll (bottom for vertical orientation, right for horizontal orientation)
-     */
-    end: number;
-    /**
      * Stores the snap position in function of gap beteen snaps (0 ,1 , 2, ...)
      */
     snapIndex: number = 0;
+    /**
+     * wheel config
+     */
+    wheel: {
+        /*
+        * Does this camera use the mouse wheel? (default = 0)
+        */
+        enable: boolean,
+        /**
+         * Variation of scroll in pixels with each wheel change (default = 55)
+         */
+        delta?: number
+    };
+    /**
+     * The width of this camera (default = game.width)
+     */
+    width: number;
+    /**
+     * The x position of this camera (default = 0)
+     */
+    x: number = 0;
+    /**
+     * The y position of this camera (default = 0)
+     */
+    y: number = 0;
+    
+    
+    
+    
+    
+    
+        
+    
 
 
 
     //// Private properties
-
+    
+    /**
+     * Scroll value when drag action ends
+     */
+    private _end: number = 0;
+    /**
+     * End bound of the scroll (bottom for vertical orientation, right for horizontal orientation)
+     */
+    private _endBound: number;
+    /**
+     * TimeStamp when drag action ends
+     */
+    private _endTime: number = 0;
+    /**
+     * Used for debug tasks
+     */
+    private _debug: boolean;
+    /**
+     * Snap state
+     */
+    private isOnSnap: boolean = true;
     /**
      * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
      */
-    private moving: boolean = false;
+    private _moving: boolean = false;    
     /**
-     * Receives input. Allows this camera be interactive even behind the main camera
+     * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
      */
-    private _zone: Phaser.GameObjects.Zone;
+    private _scrollProp: string;
+    /**
+     * Snap bounces counter
+     */
+    private _snapBounces: number = 0;
     /** 
      * Scroll speed in pixels per second
      * */
@@ -119,37 +143,24 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _start: number = 0;
     /**
-     * Scroll value when drag action ends
+     * Start bound of the scroll (top for vertical orientation, left for horizontal orientation)
      */
-    private _end: number = 0;
+    private _startBound: number;
     /**
      * TimeStamp when drag action begins
      */
     private _startTime: number = 0;
     /**
-     * TimeStamp when drag action ends
-     */
-    private _endTime: number = 0;
-    /**
-     * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
-     */
-    private _scrollProp: string;
-    /**
-     * Snap state
-     */
-    private isOnSnap: boolean = true;
-    /**
-     * Used for debug tasks
-     */
-    private _debug: boolean;
-    /**
      * Used only for debug purposes (needs this._debug = true in init())
      */
-    private txtDebug: Phaser.GameObjects.Text;
+    private _txtDebug: Phaser.GameObjects.Text;
     /**
-     * Snap bounces counter
+     * Receives input. Allows this camera be interactive even behind the main camera
      */
-    private _snapBounces: number = 0;
+    private _zone: Phaser.GameObjects.Zone;
+    
+    
+    
 
 
 
@@ -187,7 +198,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         // For use with debug function
         this._debug = false;
         if (this._debug) {
-            this.txtDebug = this.scene.add.text(this.x, this.y, 'debug');
+            this._txtDebug = this.scene.add.text(this.x, this.y, 'debug');
         }
 
         this.scene.cameras.addExisting(this);
@@ -227,7 +238,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (Math.abs(this._speed) < 1 && !this.snap.enable) {
 
             this._speed = 0;
-            this.moving = false;
+            this._moving = false;
 
         }
         else if (this.snap.enable && !this.isOnSnap && (!this.scene.input.activePointer.isDown || !this.pointerIsOver())) {
@@ -287,11 +298,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         cb.length = 'length' in cb ? cb.length : 5000;
 
         if (this.horizontal) {
-            this.start = cb.x;
-            this.end = cb.x + cb.length - this.width;
+            this._startBound = cb.x;
+            this._endBound = cb.x + cb.length - this.width;
         } else {
-            this.start = cb.y;
-            this.end = cb.y + cb.length - this.height;
+            this._startBound = cb.y;
+            this._endBound = cb.y + cb.length - this.height;
         }
 
         this.contentBounds = cb;
@@ -308,8 +319,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private initScroll() {
-        this.scrollX = this.horizontal ? this.start : this.x;
-        this.scrollY = this.horizontal ? this.y : this.start;
+        this.scrollX = this.horizontal ? this._startBound : this.x;
+        this.scrollY = this.horizontal ? this.y : this._startBound;
         this._scrollProp = this.horizontal ? 'scrollX' : 'scrollY';
     }
 
@@ -365,7 +376,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
             } else {
                 this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
             }
-            this.moving = true;
+            this._moving = true;
         }
     }
 
@@ -375,8 +386,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
         this.isOnSnap = false;
-        if (this.moving) {
-            this.moving = false;
+        if (this._moving) {
+            this._moving = false;
             this.setSpeed();
         }
     }
@@ -396,9 +407,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     // HELPERS ////
 
     private getNearest(currentPos: number): number {
-        const start = this.start;
+        const start = this._startBound;
         const padding = this.snap.padding;
-        return start + Math.round((currentPos - this.start) / padding) * padding;
+        return start + Math.round((currentPos - this._startBound) / padding) * padding;
     }
 
 
@@ -415,7 +426,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         variables.forEach((v) => {
             str += v.toString() + "\n";
         })
-        this.txtDebug.setText(str);
+        this._txtDebug.setText(str);
     }
 
 
@@ -438,11 +449,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private checkBounds() {
         const prop = this._scrollProp;
 
-        if (this[prop] <= this.start) {
-            this[prop] = this.start;
+        if (this[prop] <= this._startBound) {
+            this[prop] = this._startBound;
             this.makeSnap(this.getNearest(this[prop]));
-        } else if (this[prop] >= this.end) {
-            this[prop] = this.end;
+        } else if (this[prop] >= this._endBound) {
+            this[prop] = this._endBound;
             this.makeSnap(this.getNearest(this[prop]));
         }
     }
@@ -451,7 +462,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private clampScroll() {
         const prop = this._scrollProp;
-        this[prop] = Phaser.Math.Clamp(this[prop], this.start, this.end);
+        this[prop] = Phaser.Math.Clamp(this[prop], this._startBound, this._endBound);
         this._end = this[prop];
     }
 
@@ -460,7 +471,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private makeSnap(nearest: number) {
         const prop = this._scrollProp;
         this[prop] = nearest;
-        this.snapIndex = this.getSnapIndex(this[prop], this.start, this.snap.padding);
+        this.snapIndex = this.getSnapIndex(this[prop], this._startBound, this.snap.padding);
         this._snapBounces = 0;
         this.isOnSnap = true;
         this._speed = 0;
