@@ -40,7 +40,7 @@ There are two alternatives:
 **Important**: the class is exposed as **ScrollingCamera**
 ### From NPM
 ```
-npm i phaser-scrolling-camera
+npm i phaser3-scrolling-camera
 ```
 Then you can acces the class as:
 * CommonJS module:
