@@ -89,19 +89,19 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * The y position of this camera (default = 0)
      */
     y: number = 0;
-    
-    
-    
-    
-    
-    
-        
-    
+
+
+
+
+
+
+
+
 
 
 
     //// Private properties
-    
+
     /**
      * Scroll value when drag action ends
      */
@@ -125,7 +125,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     /**
      * Determines if draging is active. Avoids residual movement after stop the scroll with the pointer.
      */
-    private _moving: boolean = false;    
+    private _moving: boolean = false;
     /**
      * Stores 'scrollX' or 'scrollY'. This allows assign this value to a constant and change property by this[prop]
      */
@@ -158,9 +158,9 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Receives input. Allows this camera be interactive even behind the main camera
      */
     private _zone: Phaser.GameObjects.Zone;
-    
-    
-    
+
+
+
 
 
 
@@ -170,6 +170,10 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     _bounds: Phaser.Geom.Rectangle;
     matrix: Phaser.GameObjects.Components.TransformMatrix;
     culledObjects: Phaser.GameObjects.GameObject[];
+
+
+
+
 
 
     //// Constructor
