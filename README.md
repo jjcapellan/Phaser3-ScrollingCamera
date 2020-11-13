@@ -20,6 +20,8 @@ Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/
 * [Snap event](#snap-event)
 * [Public methods](#public-methods)
   * [setSpeed](#setspeed)
+* [Public properties](#public-properties)
+  * [snapIndex](#snapindex)
 * [License](#license)
 ---
 
@@ -91,6 +93,11 @@ let cameraOptions = {
     };
 const myCamera = new ScrollingCamera(this, cameraOptions);
 ```
+In this image the content for the ScrollingCamera camera is positioned out of screen, in this way we haven't to hide it to the main camera of the scene (camera.ignore(...)):  
+
+<p align="center">
+<img alt="ScrollingCamera example" src="./imgs/scrollcam-example.jpg"/>
+</p>
 
 ---
 ## Snap event
@@ -120,6 +127,9 @@ cursors.down.on('down', () => myCamera.setSpeed(50));
 cursors.up.on('down', () => myCamera.setSpeed(-50));
 ```
 ---
+## Public properties
+Besides inherited properties and the properties declared in the constructor, there are only one public property:
+* **snapIndex** {number}: Stores the snap position in function of gap beteen snaps (0 ,1 , 2, ...). This property is send with the event **snap** as argument.
 ## License
 **ScrollingCamera** is licensed under the terms of the MIT open source license.
 
