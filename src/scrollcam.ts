@@ -341,8 +341,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private initSnap(snap?: SnapConfig) {
         let s = snap || { enable: false };
-        s.bounces = snap.bounces || 3;
-        s.padding = snap.padding || 20;
+        s.bounces = s.bounces || 3;
+        s.padding = s.padding || 20;
 
         this.snap = s;
     }
