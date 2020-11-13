@@ -1,9 +1,10 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/jjcapellan/Phaser3-ScrollingCamera.svg)
 ![GitHub license](https://img.shields.io/github/license/jjcapellan/Phaser3-ScrollingCamera.svg)
 # PHASER3 - SCROLLING CAMERA CLASS
-**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of [Phaser 3](https://phaser.io/) framework, adding the capacity of vertical and horizontal scrolling by dragging or using the mouse wheel.  
-The scroll is customizable.
-Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/  
+**ScrollingCamera** extends the class **Phaser.Cameras.Scene2D.Camera** of [Phaser 3](https://phaser.io/) framework, adding the capacity of vertical and horizontal scrolling by dragging or using the mouse wheel, with optional snap system.  
+The scroll is customizable.  
+
+**Live demo**: https://jjcapellan.github.io/Phaser3-ScrollingCamera/  
 
 ## Features
 * Vertical or horizontal scroll
@@ -28,13 +29,13 @@ Live demo: https://jjcapellan.github.io/Phaser3-ScrollingCamera/
 ## Installation
 ### Browser
 There are two alternatives:
-* Download the file [scrollcam.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.0.0/dist/scrollcam.min.js) to your proyect folder and add a reference in your html:
+* Download the file [scrollcam.umd.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.0.0/dist/scrollcam.umd.js) to your proyect folder and add a reference in your html:
 ```html
-<script src = "scrollcam.min.js"></script>
+<script src = "scrollcam.umd.js"></script>
 ```  
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.0.0/dist/scrollcam.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.0.0/dist/scrollcam.umd.js"></script>
 ```  
 **Important**: the class is exposed as **ScrollingCamera**
 ### From NPM
@@ -44,7 +45,8 @@ npm i phaser-scrolling-camera
 Then you can acces the class as:
 * CommonJS module:
 ```javascript
-const ScrollingCamera = require('phaser-scrolling-camera');
+const Phaser = require('phaser');
+const ScrollingCamera = require('phaser3-scrolling-camera').default;
 
 // In scene.create function
 const config = { ... }
@@ -52,7 +54,8 @@ const myScrollCam = new ScrollingCamera(this, config);
 ```
 * ES6 module:
 ```javascript
-import ScrollingCamera from 'phaser-scrolling-camera';
+import Phaser from 'phaser';
+import ScrollingCamera from 'phaser3-scrolling-camera';
 
 // In scene.create function
 const config = { ... }
