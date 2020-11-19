@@ -1,3 +1,7 @@
+# v2.0.2
+## Minor fixes
+* Fix: wrong readme version.
+---
 # v2.0.1
 ## Fixes
 * Fix: Camera position undefined when no config object.
