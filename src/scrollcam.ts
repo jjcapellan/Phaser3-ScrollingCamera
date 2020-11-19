@@ -182,11 +182,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
         super(0, 0, 0, 0);
 
+        config = config || {};
+
         const { x, y, width, height, contentBounds, wheel, drag, snap, horizontal }: ScrollConfig = config;
 
         this.scene = scene;
-        this.x = x !== undefined ? x : this.x;
-        this.y = y !== undefined ? y : this.y;
+        this.x = x !== undefined ? x : 0;
+        this.y = y !== undefined ? y : 0;
         this.width = width || Number(this.scene.game.config.width);
         this.height = height || Number(this.scene.game.config.height);
         this.drag = drag !== undefined ? drag : this.drag;
