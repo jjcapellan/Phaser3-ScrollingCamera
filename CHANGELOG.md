@@ -1,3 +1,8 @@
+# v2.0.1
+## Fixes
+* Fix: Camera position undefined when no config object.
+* Fix: Whell.enable option not active.
+---
 # v2.0.0
 **Important**: This version breaks compatibility with previous versions.
 ## New features
