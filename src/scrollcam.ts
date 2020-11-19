@@ -360,7 +360,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this._zone.on('pointerup', this.upHandler, this);
         this._zone.on('pointerout', this.upHandler, this);
         this._zone.on('pointerdown', this.downHandler, this);
-        if (this.wheel) {
+        if (this.wheel.enable) {
             this._zone.on('wheel', this.wheelHandler, this);
         }
     }
