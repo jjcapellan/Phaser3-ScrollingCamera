@@ -81,17 +81,17 @@ let cameraOptions = {
         x: 400,          // x position of contents from top-left origin (default = cameraOptions.x)
         y: 10,           // y position of contents from top-left origin (default = cameraOptions.y)
         length: 1200     // Distance measured in pixels along the camera main axis
-      }
+      },
       wheel: {           // Mouse wheel params (optional)
         enable: true,    // Does this camera use the mouse wheel? (default = false)
         delta: 60        // Variation of scroll in pixels with each wheel change (default = 55)
-      }
+      },
       drag: 0.90,        // Reduces the scroll speed per game step in 10%. (default = 0.95)      
       snap: {
         enable: false,   // Does this camera use snap effect? (default = false)
         padding: 20,     // Gap in pixels between snaps (default = 20)
         bounces: 3       // Number of bounces on target before the snap (default = 3)
-      }
+      },
       horizontal: true   // Does this camera use horizontal scroll (default = false)
     };
 const myCamera = new ScrollingCamera(this, cameraOptions);
