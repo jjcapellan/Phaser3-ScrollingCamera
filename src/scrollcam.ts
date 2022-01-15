@@ -158,6 +158,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Receives input. Allows this camera be interactive even behind the main camera
      */
     private _zone: Phaser.GameObjects.Zone;
+    private _upTriggered: boolean = false;
 
 
 
@@ -369,6 +370,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
     private downHandler() {
         const prop = this._scrollProp;
+        this._upTriggered = false;
         this._speed = 0;
         this._snapBounces = 0;
         this._start = this[prop];
@@ -391,6 +393,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private upHandler() {
+        if(this._upTriggered)return;
+        this._upTriggered = true;
         this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
         this.isOnSnap = false;
