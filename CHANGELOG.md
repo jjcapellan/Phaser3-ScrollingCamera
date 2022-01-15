@@ -1,3 +1,7 @@
+# v2.0.3
+## Fixes
+* Fix: rough scroll stops on pointerup events, specially on mobile devices.
+---
 # v2.0.2
 ## Minor fixes
 * Fix: wrong readme version.
