@@ -137,6 +137,12 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      * Receives input. Allows this camera be interactive even behind the main camera
      */
     private _zone;
+    private _upTriggered;
+    /**
+     * Number of frames which should be rendered before set _moving to 0. This avoids rough stops on pointer up,
+     * especially on touch devices.
+     */
+    private _inertia_frames;
     private _customViewport;
     _bounds: Phaser.Geom.Rectangle;
     matrix: Phaser.GameObjects.Components.TransformMatrix;

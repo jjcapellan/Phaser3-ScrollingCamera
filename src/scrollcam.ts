@@ -159,6 +159,11 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
      */
     private _zone: Phaser.GameObjects.Zone;
     private _upTriggered: boolean = false;
+    /**
+     * Number of frames which should be rendered before set _moving to 0. This avoids rough stops on pointer up,
+     * especially on touch devices.
+     */
+    private _inertia_frames: number = 0;
 
 
 
@@ -240,11 +245,15 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this[prop] += this._speed * (delta / 1000);
         this._speed *= this.drag;
 
+        if(this._inertia_frames > 0){
+            this._inertia_frames--;
+        }
+
         if (!this.isOnSnap) {
             this.checkBounds();
         }
 
-        if (Math.abs(this._speed) < 1 && !this.snap.enable) {
+        if (Math.abs(this._speed) < 1 && !this.snap.enable && this._moving && !this._inertia_frames) {
 
             this._speed = 0;
             this._moving = false;
@@ -380,12 +389,13 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private dragHandler(pointer) {
-        if (pointer.isDown) {
+        if (pointer.isDown) {            
             if (this.horizontal) {
                 this.scrollX -= (pointer.position.x - pointer.prevPosition.x);
             } else {
                 this.scrollY -= (pointer.position.y - pointer.prevPosition.y);
             }
+            this._inertia_frames = 2;
             this._moving = true;
         }
     }
