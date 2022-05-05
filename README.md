@@ -11,7 +11,7 @@ The scroll is customizable.
 * Natural snap effect (customizable)
 * Snap event (sends the snap position)
 * Interactive, even behind other cameras.
-* Accepts dragging and mouse wheel as input (keyboard supported via setSpeed()).
+* Accepts dragging and mouse wheel as input (keyboard supported).
 
 ## Table of contents
 * [Installation](#installation)
@@ -21,6 +21,7 @@ The scroll is customizable.
 * [Snap event](#snap-event)
 * [Public methods](#public-methods)
   * [setSpeed](#setspeed)
+  * [moveToSanap](#moveToSnap)
 * [Public properties](#public-properties)
   * [snapIndex](#snapindex)
 * [License](#license)
@@ -137,8 +138,8 @@ Sets the scroll position to snapIndex instantly.
 // In create function ...
 let myCamera = new ScrollingCamera(this);
 let cursors = this.input.keyboard.createCursorKeys();
-cursors.down.on('down', () => myCamera.setSpeed(myCamera.snapIndex - 1));
-cursors.up.on('down', () => myCamera.setSpeed(myCamera.snapIndex + 1));
+cursors.down.on('down', () => myCamera.moveToSnap(myCamera.snapIndex - 1));
+cursors.up.on('down', () => myCamera.moveToSnap(myCamera.snapIndex + 1));
 ```
 ---
 ## Public properties
