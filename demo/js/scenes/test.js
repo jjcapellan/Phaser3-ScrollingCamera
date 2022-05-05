@@ -53,10 +53,14 @@ class Test extends Phaser.Scene {
     // Not necesary if the camera contents is out of screen
     this.cameras.main.ignore([contentCamera1, contentCamera2, contentCamera3, contentCamera4]);
 
-    // Space key to test moveToSnap
-    const spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    spaceKey.on('down', () => {
-      this.camera2.moveToSnap(2);
+    // Keys to test moveToSnap
+    const rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    rightKey.on('down', () => {
+      this.camera2.moveToSnap(this.camera2.snapIndex + 1);
+    });
+    const leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    leftKey.on('down', () => {
+      this.camera2.moveToSnap(this.camera2.snapIndex - 1);
     });
 
   }

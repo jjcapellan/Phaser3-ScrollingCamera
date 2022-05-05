@@ -231,7 +231,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         if (!this.snap.enable) {
             return;
         }
-        const target = this._startBound + snapIndex * this.snap.padding;
+        let target = this._startBound + snapIndex * this.snap.padding;
+        target = Phaser.Math.Clamp(target, this._startBound, this._endBound);
         this.makeSnap(target);
     }
 
@@ -499,6 +500,14 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     private clampScroll() {
         const prop = this._scrollProp;
         this[prop] = Phaser.Math.Clamp(this[prop], this._startBound, this._endBound);
+        if (this.snap.enable) {
+            if (this[prop] == this._startBound) {
+                this.snapIndex = 0;
+            }
+            if (this[prop] == this._endBound) {
+                this.snapIndex = this.getSnapIndex(this._endBound, this._startBound, this.snap.padding);
+            }
+        }
         this._end = this[prop];
     }
 
