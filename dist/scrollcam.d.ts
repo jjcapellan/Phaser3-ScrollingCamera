@@ -148,6 +148,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     matrix: Phaser.GameObjects.Components.TransformMatrix;
     culledObjects: Phaser.GameObjects.GameObject[];
     constructor(scene: Phaser.Scene, config: ScrollConfig);
+    moveToSnap(snapIndex: number): void;
     /**
      * Sets scroll speed in pixels/second. Use it to control scroll with any key or button.
      * @param { numer } [speed]
