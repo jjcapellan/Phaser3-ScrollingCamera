@@ -224,6 +224,20 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
     //// PUBLIC METHODS /////////////////////////
 
     /**
+     * Sets scroll position to snapIndex if snap.enable == true
+     * @param { number } snapIndex
+     */
+    moveToSnap(snapIndex: number) {
+        if (!this.snap.enable) {
+            return;
+        }
+        const target = this._startBound + snapIndex * this.snap.padding;
+        this.makeSnap(target);
+    }
+
+
+
+    /**
      * Sets scroll speed in pixels/second. Use it to control scroll with any key or button.
      * @param { numer } [speed] 
      */
@@ -245,7 +259,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this[prop] += this._speed * (delta / 1000);
         this._speed *= this.drag;
 
-        if(this._inertia_frames > 0){
+        if (this._inertia_frames > 0) {
             this._inertia_frames--;
         }
 
@@ -389,7 +403,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private dragHandler(pointer) {
-        if (pointer.isDown) {            
+        if (pointer.isDown) {
             if (this.horizontal) {
                 this.scrollX -= (pointer.position.x - pointer.prevPosition.x);
             } else {
@@ -403,7 +417,7 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     private upHandler() {
-        if(this._upTriggered)return;
+        if (this._upTriggered) return;
         this._upTriggered = true;
         this._end = this.horizontal ? this.scrollX : this.scrollY;
         this._endTime = performance.now();
