@@ -1,3 +1,7 @@
+# v2.1.0
+## New features
+* **moveToSnap(snapIndex: number)** : Sets scroll position to snapIndex instantly. 
+---
 # v2.0.3
 ## Fixes
 * Fix: rough scroll stops on pointerup events, specially on mobile devices.
