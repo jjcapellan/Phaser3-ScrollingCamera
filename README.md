@@ -116,7 +116,7 @@ myCamera.on('snap', (snapIndex) => {
 ```
 ---
 ## Public methods
-Besides the functions inherited from the parent class, ScrollingCamera only have one public method:
+Besides the functions inherited from the parent class, ScrollingCamera have these public methods:
 ### <a id="setspeed"></a>setSpeed(speed: number)
 Params:
 * **speed** : scroll speed in pixels/second   
@@ -128,6 +128,17 @@ let myCamera = new ScrollingCamera(this);
 let cursors = this.input.keyboard.createCursorKeys();
 cursors.down.on('down', () => myCamera.setSpeed(50));
 cursors.up.on('down', () => myCamera.setSpeed(-50));
+```
+### <a id="moveToSnap"></a>moveToSnap(snapIndex: number)
+Params:
+* **snapIndex** {number}: Snap position in function of gap beteen snaps (0 ,1 , 2, ...).
+Sets the scroll position to snapIndex instantly.
+```javascript
+// In create function ...
+let myCamera = new ScrollingCamera(this);
+let cursors = this.input.keyboard.createCursorKeys();
+cursors.down.on('down', () => myCamera.setSpeed(myCamera.snapIndex - 1));
+cursors.up.on('down', () => myCamera.setSpeed(myCamera.snapIndex + 1));
 ```
 ---
 ## Public properties
