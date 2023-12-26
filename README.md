@@ -30,13 +30,13 @@ The scroll is customizable.
 ## Installation
 ### Browser
 There are two alternatives:
-* Download the file [scrollcam.umd.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.1.0/dist/scrollcam.umd.js) to your proyect folder and add a reference in your html:
+* Download the file [scrollcam.umd.js](https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.1.1/dist/scrollcam.umd.js) to your proyect folder and add a reference in your html:
 ```html
 <script src = "scrollcam.umd.js"></script>
 ```  
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.1.0/dist/scrollcam.umd.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/Phaser3-ScrollingCamera@2.1.1/dist/scrollcam.umd.js"></script>
 ```  
 **Important**: the class is exposed as **ScrollingCamera**
 ### From NPM
