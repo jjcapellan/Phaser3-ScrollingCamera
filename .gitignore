@@ -15,9 +15,6 @@ node_modules/
 package-lock.json
 *.tgz
 
-# dist folder
-dist/
-
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
