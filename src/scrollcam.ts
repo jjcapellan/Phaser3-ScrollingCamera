@@ -256,6 +256,8 @@ export default class ScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
 
 
     update(_time, delta) {
+        super.update(_time, delta);
+
         const prop = this._scrollProp;
         this[prop] += this._speed * (delta / 1000);
         this._speed *= this.drag;
