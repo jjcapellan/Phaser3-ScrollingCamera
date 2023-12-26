@@ -1,6 +1,6 @@
 {
   "name": "phaser3-scrolling-camera",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Class for Phaser 3 framework, adding the capacity of scrolling by dragging or using the mouse wheel",
   
   "main": "dist/scrollcam.js",
