@@ -1,3 +1,7 @@
+# v2.1.1
+## Fixes
+* Fix: camera super.update() function is not called. (Thanks @AlexSterk)
+---
 # v2.1.0
 ## New features
 * **moveToSnap(snapIndex: number)** : Sets scroll position to snapIndex instantly. 
